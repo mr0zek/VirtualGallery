@@ -1,6 +1,6 @@
 ﻿using VG.MasterpieceCatalog.Domain;
 
-namespace VG.MasterpieceCatalog.Application.ReserveMasterpiece
+namespace VG.MasterpieceCatalog.Features.Masterpiece.ReserveMasterpiece
 {
   public class ReserveMasterpieceCommand
   {

@@ -1,14 +1,13 @@
 ﻿using VG.MasterpieceCatalog.Domain;
 
-namespace VG.MasterpieceCatalog.Application.ReserveMasterpiece
+namespace VG.MasterpieceCatalog.Features.Masterpiece.BuyMasterpiece
 {
-  public class ReserveMasterpieceCommand
+  public class BuyMasterpieceCommand
   {
     public MasterpieceId MasterpieceId { get; set; }
     public CustomerId CustomerId { get; }
     public CustomerId CustormerId { get; set; }
-
-    public ReserveMasterpieceCommand(MasterpieceId masterpieceId, CustomerId customerId)
+    public BuyMasterpieceCommand(MasterpieceId masterpieceId, CustomerId customerId)
     {
       MasterpieceId = masterpieceId;
       CustomerId = customerId;

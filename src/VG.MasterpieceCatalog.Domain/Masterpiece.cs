@@ -4,14 +4,43 @@ using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Domain
 {
-  public class Masterpiece : AggregateRoot
+  public class Masterpiece : AggregateRootES
   {
+    public MasterpieceId Id { get; }
+    public string Name { get; }
+    public Money Price { get; }
+    private readonly string _name;
+    private readonly Money _price;
+    
     /// <summary>
     /// customers who bought the masterpiece
     /// </summary>
     private readonly ISet<CustomerId> _customersIds = new HashSet<CustomerId>();
 
     private CustomerId _reservationCustomerId;
+    
+    //public Masterpiece(MasterpieceId id, string name, Money price) : base(id)
+    //{
+    //  _name = name;
+    //  _price = price;
+    //}
+
+    public Masterpiece()
+    {
+
+    }
+
+    public Masterpiece(IEnumerable<IEvent> history)
+    {
+      LoadsFromHistory(history);
+    }
+
+    public Masterpiece(MasterpieceId id, string name, Money price)
+    {
+      Id = id;
+      Name = name;
+      Price = price;
+    }
 
     public void Buy(CustomerId customerId)
     {

@@ -3,7 +3,7 @@ using VG.MasterpieceCatalog.Domain;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
-  public class MasterpieceRepository : IMasterpieceRepository
+  class MasterpieceRepository : IMasterpieceRepository
   {
     public Masterpiece Get(MasterpieceId id)
     {
@@ -11,6 +11,11 @@ namespace VG.MasterpieceCatalog.Infrastructure
     }
 
     public void Save(Masterpiece masterpiece)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Delete(Masterpiece masterpiece)
     {
       throw new NotImplementedException();
     }

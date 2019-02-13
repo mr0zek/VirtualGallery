@@ -1,13 +1,12 @@
 ﻿using System;
-using VG.MasterpieceCatalog.Domain;
 
-namespace VG.MasterpieceCatalog.Controllers
+namespace VG.MasterpieceCatalog.Command
 {
   public class MasterpiecePostModel
 
   {
     public decimal Price { get; set; }
     public string Name { get; set; }
-    public Guid Id { get; set; }
+    public Guid MasterpieceId { get; set; }
   }
 }

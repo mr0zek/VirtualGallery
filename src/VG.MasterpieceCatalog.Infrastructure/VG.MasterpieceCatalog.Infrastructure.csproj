@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VG.MasterpieceCatalog.Domain\VG.MasterpieceCatalog.Domain.csproj" />
   </ItemGroup>
 

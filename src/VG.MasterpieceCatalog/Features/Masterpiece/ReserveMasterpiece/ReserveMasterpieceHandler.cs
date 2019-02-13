@@ -1,8 +1,8 @@
-﻿using VG.MasterpieceCatalog.Application.BaseTypes;
-using VG.MasterpieceCatalog.Application.ReserveMasterpiece;
+﻿using VG.MasterpieceCatalog.Application;
+using VG.MasterpieceCatalog.Application.BaseTypes;
 using VG.MasterpieceCatalog.Domain;
 
-namespace VG.MasterpieceCatalog.Application.CreateMasterpiece
+namespace VG.MasterpieceCatalog.Features.Masterpiece.ReserveMasterpiece
 {
   public class ReserveMasterpieceHandler : ICommandHandler<ReserveMasterpieceCommand>
   {
@@ -17,7 +17,7 @@ namespace VG.MasterpieceCatalog.Application.CreateMasterpiece
 
     public void Handle(ReserveMasterpieceCommand command)
     {
-      Masterpiece m = _masterpieceRepository.Get(command.MasterpieceId);
+      Domain.Masterpiece m = _masterpieceRepository.Get(command.MasterpieceId);
       m.Reserve(command.CustormerId, _customerRepository);
       _masterpieceRepository.Save(m);
     }

@@ -8,4 +8,10 @@
     <ProjectReference Include="..\VG.MasterpieceCatalog.Domain\VG.MasterpieceCatalog.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\..\..\Users\mr0zek\.nuget\packages\autofac\4.6.1\lib\netstandard1.1\Autofac.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
