@@ -1,4 +1,4 @@
-﻿namespace VG.MasterpieceCatalog.BaseTypes
+﻿namespace VG.MasterpieceCatalog.Application.Infrastructure
 {
   public interface ICommandHandler<in T>
   {

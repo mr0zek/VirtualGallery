@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A8369C84-C25E-44DA-A296-D797F4D46EFD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VG.Masterpiece.Application</RootNamespace>
+    <AssemblyName>VG.Masterpiece.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Features\BuyMasterpiece\BuyMasterpieceCommand.cs" />
+    <Compile Include="Features\BuyMasterpiece\BuyMasterpieceController.cs" />
+    <Compile Include="Features\BuyMasterpiece\BuyMasterpieceHandler.cs" />
+    <Compile Include="Features\CreateMasterpiece\CreateMasterpieceCommand.cs" />
+    <Compile Include="Features\CreateMasterpiece\CreateMasterpieceCommandController.cs" />
+    <Compile Include="Features\CreateMasterpiece\CreateMasterpieceHandler.cs" />
+    <Compile Include="Features\CreateMasterpiece\MasterpiecePostModel.cs" />
+    <Compile Include="Features\DeleteMasterpiece\DeleteMasterpieceCommand.cs" />
+    <Compile Include="Features\DeleteMasterpiece\DeleteMasterpieceHandler.cs" />
+    <Compile Include="Features\Events\EventsController.cs" />
+    <Compile Include="Features\Events\IEventRepository.cs" />
+    <Compile Include="Features\Events\MasterpieceEvent.cs" />
+    <Compile Include="Features\ReserveMasterpiece\ReserveMasterpieceCommand.cs" />
+    <Compile Include="Features\ReserveMasterpiece\ReserveMasterpieceHandler.cs" />
+    <Compile Include="Features\RevokeMasterpieceReservation\RevokeMasterpieceReservationCommand.cs" />
+    <Compile Include="Features\RevokeMasterpieceReservation\RevokeMasterpieceReservationHandler.cs" />
+    <Compile Include="Infrastructure\DatabaseMigrator.cs" />
+    <Compile Include="Infrastructure\MasterpieceAutofacModule.cs" />
+    <Compile Include="Infrastructure\Migrartions\EventStore.cs" />
+    <Compile Include="Infrastructure\Migrartions\ScriptsDummyClass.cs" />
+    <Compile Include="MasterpieceBootstrap.cs" />
+    <Compile Include="MasterpieceStartup.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
