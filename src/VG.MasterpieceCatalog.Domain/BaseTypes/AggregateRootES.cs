@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VG.MasterpieceCatalog.Domain.BaseTypes
 {
@@ -10,7 +11,7 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
   {
     private readonly List<IEvent> _changes = new List<IEvent>();
 
-    public Guid Id { get; }
+    public string Id { get; protected set; }
     public int Version { get; internal set; }
 
     IEnumerable<IEvent> IEventsCollectionAccesor.GetUncommittedChanges()
@@ -22,8 +23,10 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
     {
       foreach (var e in history)
       {
-        this.AsDynamic().Apply(e);
+        this.AsDynamic().Apply(e);        
       }
+
+      Version = history.Count();
     }
 
     protected void PublishEvent(IEvent @event)

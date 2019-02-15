@@ -15,6 +15,7 @@ namespace VG.MasterpieceCatalog.Infrastructure
     {
       builder.RegisterType<MasterpieceRepository>().AsImplementedInterfaces();
       builder.RegisterType<EventStore>().WithParameter("connectionString", _connectionString).AsImplementedInterfaces();
+      builder.RegisterType<CustomerRepository>().AsImplementedInterfaces();
     }
   }
 }

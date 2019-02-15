@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Xml;
 using Microsoft.Extensions.Configuration;
 using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Infrastructure;

@@ -36,9 +36,7 @@ namespace VG.MasterpieceCatalog.Application
       services.AddLogging(loggingBuilder =>
       {
         loggingBuilder
-          .AddConsole()
-          .AddConfiguration(Configuration.GetSection("logging"))
-          .AddDebug();
+          .AddLog4Net("log4net.config");
       });
 
       services.AddSwaggerGen(c =>
@@ -70,6 +68,7 @@ namespace VG.MasterpieceCatalog.Application
         app.UseHsts();
       }
 
+      app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {

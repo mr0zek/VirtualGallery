@@ -5,10 +5,11 @@ namespace VG.MasterpieceCatalog.Infrastructure
 {
   public interface IEventStore
   {
-    void Save(string aggregateId, IEnumerable<IEvent> events);
+    void Save(string aggregateId, IEnumerable<IEvent> events, int? expectedVersion);
 
-    IEnumerable<Event> GetFrom(int lastEventId, int count);
+    IEnumerable<Event> GetFrom(int? lastEventId, int count);
 
     IEnumerable<IEvent> Load(string aggregateId);
+    bool HasEvents(string aggregateId);
   }
 }

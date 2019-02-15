@@ -2,7 +2,12 @@
 {
   public class Customer
   {
-    private bool _isVip; 
+    private bool _isVip;
+
+    public Customer(bool isVip)
+    {
+      _isVip = isVip;
+    }
 
     public bool CanReserve()
     {

@@ -12,11 +12,11 @@ namespace VG.MasterpieceCatalog.Application.Features.RevokeMasterpieceReservatio
       _masterpieceRepository = masterpieceRepository;
     }
 
-    public void Handle(RevokeMasterpieceReservationCommand reservationCommand)
+    public void Handle(RevokeMasterpieceReservationCommand command)
     {
-      Domain.Masterpiece m = _masterpieceRepository.Get(reservationCommand.MasterpieceId);
-      m.RevokeReservation(reservationCommand.CustomerId);
-      _masterpieceRepository.Save(m);
+      Domain.Masterpiece m = _masterpieceRepository.Get(command.MasterpieceId);
+      m.RevokeReservation(command.CustomerId);
+      _masterpieceRepository.Save(m, command.ExpectedVersion);
     }
   }
 }

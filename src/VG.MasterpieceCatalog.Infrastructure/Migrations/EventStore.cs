@@ -10,6 +10,7 @@ namespace VG.MasterpieceCatalog.Infrastructure.Migrations
       Create.Table("Events")
         .WithColumn("Id").AsInt64().PrimaryKey().Identity()
         .WithColumn("AggregateId").AsString(512)
+        .WithColumn("Version").AsInt32()
         .WithColumn("Data").AsString(int.MaxValue).NotNullable();
     }
 

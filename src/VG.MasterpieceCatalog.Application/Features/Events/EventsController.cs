@@ -17,9 +17,15 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
     }
 
     [HttpGet()]
-    public ActionResult<MasterpieceEvent[]> Get([FromQuery]int lastEventId, [FromQuery]int count)
+    public ActionResult<MasterpieceEvent[]> Get([FromQuery]int? lastEventId, [FromQuery]int? count)
     {
-      return _eventRepository.GetFrom(lastEventId, count).Select(f=>new MasterpieceEvent(){ Id = f.Id, Event = f.Data }).ToArray();
+      if (count == null)
+      {
+        count = 100;
+      }      
+      return _eventRepository.GetFrom(lastEventId, count.Value)
+        .Select(f=>new MasterpieceEvent()
+          { Id = f.Id, Type = f.Data.GetType().Name, Version = f.Version, Event = f.Data }).ToArray();
     }
   }
 }

@@ -6,18 +6,16 @@ namespace VG.MasterpieceCatalog.Domain
   public class MasterpieceReservedEvent : IEvent
   {
     public string AggregateId { get; set; }
-    public CustomerId CustomerId { get; set; }
-    public int Version { get; set; }
+    public string CustomerId { get; set; }
 
     public MasterpieceReservedEvent()
     {
     }
 
-    public MasterpieceReservedEvent(MasterpieceId id, CustomerId customerId, int version)
+    public MasterpieceReservedEvent(MasterpieceId id, CustomerId customerId)
     {
       AggregateId = id;
-      CustomerId = customerId;
-      Version = version;
+      CustomerId = customerId;      
     }
   }
 }

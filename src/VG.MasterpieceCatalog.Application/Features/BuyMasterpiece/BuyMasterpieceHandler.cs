@@ -15,8 +15,8 @@ namespace VG.MasterpieceCatalog.Application.Features.BuyMasterpiece
     public void Handle(BuyMasterpieceCommand command)
     {
       Domain.Masterpiece m = _masterpieceRepository.Get(command.MasterpieceId);
-      m.Buy(command.CustormerId);
-      _masterpieceRepository.Save(m);
+      m.Buy(command.CustomerId);
+      _masterpieceRepository.Save(m, command.ExpectedVersion);
     }
   }
 }

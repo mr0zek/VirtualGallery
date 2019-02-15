@@ -5,94 +5,113 @@ namespace VG.MasterpieceCatalog.Domain
 {
   public class Masterpiece : AggregateRootES
   {
-    public MasterpieceId Id { get; }
-    public string Name { get; }
-    public Money Price { get; }
-    private readonly string _name;
-    private readonly Money _price;
-    
+    private string _name;
+    private Money _price;
     /// <summary>
     /// customers who bought the masterpiece
     /// </summary>
     private readonly ISet<CustomerId> _customersIds = new HashSet<CustomerId>();
-
     private CustomerId _reservationCustomerId;
-    
-    //public Masterpiece(MasterpieceId id, string name, Money price) : base(id)
-    //{
-    //  _name = name;
-    //  _price = price;
-    //}
-
-    public Masterpiece()
-    {
-    }
+    private bool _isRemoved;
 
     public Masterpiece(IEnumerable<IEvent> history)
     {
       LoadsFromHistory(history);
     }
 
+    private void Apply(MasterpieceCreatedEvent @event)
+    {
+      Id = @event.AggregateId;
+      _name = @event.Name;
+      _price = @event.Price;      
+    }
+
+    private void Apply(MasterpieceRemovedEvent @event)
+    {
+      _isRemoved = true;      
+    }
+
+    private void Apply(MasterpieceReservedEvent @event)
+    {
+      _reservationCustomerId = @event.CustomerId;      
+    }
+
+    private void Apply(RevokedMasterpieceReservationEvent @event)
+    {
+      _reservationCustomerId = null;      
+    }
+
     public Masterpiece(MasterpieceId id, string name, Money price)
     {
       Id = id;
-      Name = name;
-      Price = price;
-      PublishEvent(new MasterpieceCreatedEvent() { AggregateId = Id, Name = Name, Price = Price, Version = Version });
+      _name = name;
+      _price = price;
+      PublishEvent(new MasterpieceCreatedEvent() { AggregateId = Id, Name = _name, Price = _price });
     }
 
     public void Buy(CustomerId customerId)
     {
       if (_reservationCustomerId != customerId)
       {
-        throw new DomainEvent("Can be bought");
+        throw new DomainException("Can be bought");
       }
 
       if (_customersIds.Contains(customerId))
       {
-        throw new DomainEvent("Already bought");
+        throw new DomainException("Already bought");
       }
 
       _customersIds.Add(customerId);
 
-      PublishEvent(new MasterpieceBoughtEvent(Id, customerId, Version));
+      PublishEvent(new MasterpieceBoughtEvent(Id, customerId));
+    }
+
+    public void Remove()
+    {
+      _isRemoved = true;
+      PublishEvent(new MasterpieceRemovedEvent(Id));
     }
 
     public void Reserve(CustomerId customerId, ICustomerRepository customerRepository)
     {
       if (!customerRepository.Get(customerId).CanReserve())
       {
-        throw new DomainEvent("Only VIP Clients can reserve masterpieces");
+        throw new DomainException("Only VIP Clients can reserve masterpieces");
       }
 
       if (_reservationCustomerId == customerId)
       {
-        throw new DomainEvent("Already reserved by you");
+        throw new DomainException("Already reserved by you");
       }
 
       if (_reservationCustomerId != null && _reservationCustomerId != customerId)
       {
-        throw new DomainEvent("Already reserved");
+        throw new DomainException("Already reserved");
       }
 
       _reservationCustomerId = customerId;
-      PublishEvent(new MasterpieceReservedEvent(Id, customerId, Version));
+      PublishEvent(new MasterpieceReservedEvent(Id, customerId));
     }
 
     public void RevokeReservation(CustomerId customerId)
     {
       if (_reservationCustomerId == null)
       {
-        throw new DomainEvent("Not reserved");
+        throw new DomainException("Not reserved");
       }
 
       if (_reservationCustomerId != null && _reservationCustomerId != customerId)
       {
-        throw new DomainEvent("Not reserved by you");
+        throw new DomainException("Not reserved by you");
       }
 
       _reservationCustomerId = null;
-      PublishEvent(new RevokedMasterpieceReservationEvent(Id, customerId, Version));
+      PublishEvent(new RevokedMasterpieceReservationEvent(Id, customerId));
+    }
+
+    public bool IsRemoved()
+    {
+      return _isRemoved;
     }
   }
 }

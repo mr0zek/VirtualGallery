@@ -1,4 +1,7 @@
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml;
 using Autofac;
 using RestEase;
 using VG.MasterpieceCatalog.Application;
@@ -14,15 +17,24 @@ namespace VG.Tests
   {
     public IntegrationTest() : base(@"Server=(local);Database=Test;Integrated Security=true;")
     {
+      XmlDocument log4netConfig = new XmlDocument();
+      log4netConfig.Load(File.OpenRead("log4net.config"));
+
+      var repo = log4net.LogManager.CreateRepository(
+        Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+      
+      log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+
       new DatabaseMigrator().Migrate(ConnectionString);
     }
 
     [Fact]
-    public async void Test1()
+    [Trait("Category","Integration")]
+    public async void HappyScenario()
     {
       // Arrange     
       int port = 12121;
-      MasterpieceBootstrap.Run(new string[0], builder => { }, port);
+      MasterpieceBootstrap.Run(new string[0], builder => { }, port, ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
       NotificationBootstrap.Run(new string[0], builder =>
       {
@@ -31,9 +43,9 @@ namespace VG.Tests
 
       // Act
       var masterpieceApi = RestClient.For<IMasterpieceApi>(masterpieceCatalogUrl);
-      await masterpieceApi.PostMasterpiece(new MasterpieceCreateRequest()
+      await masterpieceApi.PostMasterpiece(new CreateMasterpieceRequest()
       {
-        MasterpieceId = "m1",
+        Id = "m1",
         Name = "Test1",
         Price = 15
       });
@@ -56,16 +68,16 @@ namespace VG.Tests
   public interface IMasterpieceApi
   {
     [Post("api/masterpieces")]
-    Task PostMasterpiece([Body]MasterpieceCreateRequest request);
+    Task PostMasterpiece([Body]CreateMasterpieceRequest request);
 
     [Post("api/masterpieces/{id}/reservation")]
     Task PostMasterpieceReservation([Path]string id, [Body]MasterpieceReservationRequest masterpieceReservationRequest);
   }
 
-  public class MasterpieceCreateRequest
+  public class CreateMasterpieceRequest
   {
     public decimal Price { get; set; }
     public string Name { get; set; }
-    public string MasterpieceId { get; set; }
+    public string Id { get; set; }
   }
 }

@@ -2,10 +2,13 @@
 
 namespace VG.MasterpieceCatalog.Domain
 {
-  public class MasterpieceCreatedEvent : IEvent
+  public class MasterpieceRemovedEvent : IEvent
   {
     public string AggregateId { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
+
+    public MasterpieceRemovedEvent(MasterpieceId id)
+    {
+      AggregateId = id;
+    }    
   }
 }

@@ -7,15 +7,12 @@ namespace VG.MasterpieceCatalog.Domain
   {
     public string AggregateId { get; set; }
 
-    public CustomerId CustomerId { get; }
+    public string CustomerId { get; }
 
-    public int Version { get; set; }
-
-    public MasterpieceBoughtEvent(MasterpieceId masterpieceId, CustomerId customerId, int version)
+    public MasterpieceBoughtEvent(MasterpieceId masterpieceId, CustomerId customerId)
     {
       AggregateId = masterpieceId;
       CustomerId = customerId;
-      Version = version;
     }    
   }
 }

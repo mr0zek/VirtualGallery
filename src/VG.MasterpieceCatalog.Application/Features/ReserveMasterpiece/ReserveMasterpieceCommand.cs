@@ -6,12 +6,13 @@ namespace VG.MasterpieceCatalog.Application.Features.ReserveMasterpiece
   {
     public MasterpieceId MasterpieceId { get; set; }
     public CustomerId CustomerId { get; }
-    public CustomerId CustormerId { get; set; }
+    public int? ExpectedVersion { get; }
 
-    public ReserveMasterpieceCommand(MasterpieceId masterpieceId, CustomerId customerId)
+    public ReserveMasterpieceCommand(MasterpieceId masterpieceId, CustomerId customerId, int? expectedVersion)
     {
       MasterpieceId = masterpieceId;
       CustomerId = customerId;
+      ExpectedVersion = expectedVersion;
     }
   }
 }

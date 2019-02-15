@@ -15,7 +15,7 @@ namespace VG.MasterpieceCatalog.Application.Features.CreateMasterpiece
     public void Handle(CreateMasterpieceCommand command)
     {
       Masterpiece m = new Masterpiece(command.Id, command.Name, command.Price);
-      _masterpieceRepository.Save(m);
+      _masterpieceRepository.Save(m, null);
     }
   }
 }

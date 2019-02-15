@@ -13,9 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Masterpiece", "Masterpiece"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{0D24E242-F27D-446C-B0C1-385E4C2C2046}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterpiecePerspective", "MasterpiecePerspective", "{5FC33F81-1114-433E-A580-92A56FB352E4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VG.MasterpieceCatalog.Application", "VG.MasterpieceCatalog.Application\VG.MasterpieceCatalog.Application.csproj", "{DC6B9429-0653-4044-B15F-C0F3C7A19932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.MasterpieceCatalog.Application", "VG.MasterpieceCatalog.Application\VG.MasterpieceCatalog.Application.csproj", "{DC6B9429-0653-4044-B15F-C0F3C7A19932}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.Notification", "VG.Notification\VG.Notification.csproj", "{082B2936-A61C-4DC0-AC05-E80A3676DD89}"
 EndProject
