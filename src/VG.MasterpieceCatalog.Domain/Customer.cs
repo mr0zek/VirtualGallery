@@ -1,4 +1,4 @@
-﻿namespace VG.MasterpieceCatalog.Application.Commands.ReserveMasterpiece
+﻿namespace VG.MasterpieceCatalog.Domain
 {
   public class Customer
   {

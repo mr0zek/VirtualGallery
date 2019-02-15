@@ -1,4 +1,4 @@
-﻿namespace VG.MasterpieceCatalog.Controllers
+﻿namespace VG.MasterpieceCatalog.Perspective
 {
   public class MasterpieceGetModel
   {

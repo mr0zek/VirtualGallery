@@ -1,20 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using System.Runtime.InteropServices;
-using Dapper;
+﻿using Dapper;
 using Newtonsoft.Json;
-using VG.MasterpieceCatalog.Domain;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
-  internal interface IEventStore
+  public interface IEventStore
   {
-    void Save(string id, IEnumerable<IEvent> events);
-    IEnumerable<IEvent> Load(string id);
+    void Save(string aggregateId, IEnumerable<IEvent> events);
+
+    IEnumerable<Event> GetFrom(int lastEventId, int count);
+
+    IEnumerable<IEvent> Load(string aggregateId);
   }
 
-  class EventStore : IEventStore
+  internal class EventStore : IEventStore
   {
     private readonly string _connectionString;
 
@@ -22,24 +24,49 @@ namespace VG.MasterpieceCatalog.Infrastructure
     {
       _connectionString = connectionString;
     }
-    public void Save(string id, IEnumerable<IEvent> events)
+    public void Save(string aggregateId, IEnumerable<IEvent> events)
     {
       SqlConnection connection = new SqlConnection(_connectionString);
       foreach (IEvent @event in events)
       {
-        JsonSerializer serializer = new JsonSerializer();
-        using (StringWriter sw = new StringWriter())
+        JsonSerializerSettings settings = new JsonSerializerSettings
         {
-          serializer.Serialize(sw, @event);
-          connection.Execute("insert into(id, type, data)values(@id,@data)",
-            new {id, type = @event.GetType().FullName, data = sw.GetStringBuilder().ToString()});
-        }
+          TypeNameHandling = TypeNameHandling.All
+        };
+
+        string strJson = JsonConvert.SerializeObject(@event, settings);
+        connection.Execute("insert into Events(aggregateId, data)values(@aggregateId,@data)",
+          new { aggregateId = @event.AggregateId, data = strJson });
       }
     }
 
-    public IEnumerable<IEvent> Load(string id)
+    public IEnumerable<IEvent> Load(string aggregateId)
     {
-      throw new System.NotImplementedException();
+      JsonSerializerSettings settings = new JsonSerializerSettings
+      {
+        TypeNameHandling = TypeNameHandling.All
+      };
+
+      SqlConnection connection = new SqlConnection(_connectionString);
+      return connection.Query<string>("select data from Events where aggregateId = @aggregateId",
+          new { aggregateId }).Select(f => JsonConvert.DeserializeObject<IEvent>(f, settings));
+    }
+
+    public IEnumerable<Event> GetFrom(int lastEventId, int count)
+    {
+      JsonSerializerSettings settings = new JsonSerializerSettings
+      {
+        TypeNameHandling = TypeNameHandling.All
+      };
+
+      SqlConnection connection = new SqlConnection(_connectionString);
+      return connection.Query<dynamic>("select id, data from Events where id > @lastEventId and id < @finalId", 
+          new { lastEventId, finalId = lastEventId+count })
+        .Select(f =>
+      {
+        IEvent @event = JsonConvert.DeserializeObject<IEvent>(f.Data, settings);
+        return new Event(f.Id, @event);
+      });
     }
   }
 }

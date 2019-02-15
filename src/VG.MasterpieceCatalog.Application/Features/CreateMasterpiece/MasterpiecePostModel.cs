@@ -7,6 +7,6 @@ namespace VG.MasterpieceCatalog.Application.Features.CreateMasterpiece
   {
     public decimal Price { get; set; }
     public string Name { get; set; }
-    public Guid MasterpieceId { get; set; }
+    public string MasterpieceId { get; set; }
   }
 }

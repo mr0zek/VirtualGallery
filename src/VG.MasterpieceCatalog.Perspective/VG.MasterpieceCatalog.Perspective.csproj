@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>C:\Users\szymek\.nuget\packages\autofac\4.9.0\lib\netstandard2.0\Autofac.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Autofac" Version="4.9.0" />
   </ItemGroup>
 
 </Project>

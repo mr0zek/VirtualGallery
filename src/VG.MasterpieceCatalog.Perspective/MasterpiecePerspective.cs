@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using VG.MasterpieceCatalog.Controllers;
 
 namespace VG.MasterpieceCatalog.Perspective
 {
@@ -13,7 +12,7 @@ namespace VG.MasterpieceCatalog.Perspective
 
     public MasterpieceGetModel Get(Guid id)
     {
-      throw new NotImplementedException();
+      return new MasterpieceGetModel();
     }
   }
 }

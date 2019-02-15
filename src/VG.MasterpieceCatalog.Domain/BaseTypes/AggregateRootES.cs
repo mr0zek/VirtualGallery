@@ -28,7 +28,6 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
 
     protected void PublishEvent(IEvent @event)
     {
-      this.AsDynamic().Apply(@event);
       _changes.Add(@event);
     }
   }

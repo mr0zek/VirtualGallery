@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.MasterpieceCatalog", "VG.MasterpieceCatalog\VG.MasterpieceCatalog.csproj", "{D3889AFB-D6FA-4945-813D-8C14EAFA4097}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.MasterpieceCatalog.Domain", "VG.MasterpieceCatalog.Domain\VG.MasterpieceCatalog.Domain.csproj", "{FE6316DD-7118-4A9E-A468-0502C06A2374}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.MasterpieceCatalog.Infrastructure", "VG.MasterpieceCatalog.Infrastructure\VG.MasterpieceCatalog.Infrastructure.csproj", "{1B1A41BD-A40D-451F-A0E9-A8A4C0E901A0}"
@@ -19,7 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notificatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MasterpiecePerspective", "MasterpiecePerspective", "{5FC33F81-1114-433E-A580-92A56FB352E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VG.MasterpieceCatalog.Application", "VG.MasterpieceCatalog.Application\VG.MasterpieceCatalog.Application.csproj", "{DC6B9429-0653-4044-B15F-C0F3C7A19932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.MasterpieceCatalog.Application", "VG.MasterpieceCatalog.Application\VG.MasterpieceCatalog.Application.csproj", "{DC6B9429-0653-4044-B15F-C0F3C7A19932}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VG.Notification", "VG.Notification\VG.Notification.csproj", "{BACBF5C7-E1B4-42C2-9571-B53FC7C1ACC1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.Host", "VG.Host\VG.Host.csproj", "{D511F172-10FC-42B7-965F-A435A16CDF4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D3889AFB-D6FA-4945-813D-8C14EAFA4097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3889AFB-D6FA-4945-813D-8C14EAFA4097}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3889AFB-D6FA-4945-813D-8C14EAFA4097}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3889AFB-D6FA-4945-813D-8C14EAFA4097}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FE6316DD-7118-4A9E-A468-0502C06A2374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FE6316DD-7118-4A9E-A468-0502C06A2374}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE6316DD-7118-4A9E-A468-0502C06A2374}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +49,14 @@ Global
 		{DC6B9429-0653-4044-B15F-C0F3C7A19932}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC6B9429-0653-4044-B15F-C0F3C7A19932}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC6B9429-0653-4044-B15F-C0F3C7A19932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACBF5C7-E1B4-42C2-9571-B53FC7C1ACC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACBF5C7-E1B4-42C2-9571-B53FC7C1ACC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACBF5C7-E1B4-42C2-9571-B53FC7C1ACC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACBF5C7-E1B4-42C2-9571-B53FC7C1ACC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D511F172-10FC-42B7-965F-A435A16CDF4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D511F172-10FC-42B7-965F-A435A16CDF4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D511F172-10FC-42B7-965F-A435A16CDF4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D511F172-10FC-42B7-965F-A435A16CDF4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{1B1A41BD-A40D-451F-A0E9-A8A4C0E901A0} = {4EE597B8-1334-488F-B07A-AC25A8BD98FF}
 		{AC3385E3-24E1-4824-9CC5-C62CA7BF5AAD} = {4EE597B8-1334-488F-B07A-AC25A8BD98FF}
 		{DC6B9429-0653-4044-B15F-C0F3C7A19932} = {4EE597B8-1334-488F-B07A-AC25A8BD98FF}
+		{BACBF5C7-E1B4-42C2-9571-B53FC7C1ACC1} = {0D24E242-F27D-446C-B0C1-385E4C2C2046}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C83931F-78AF-43FB-BEB3-05E1FE4A0A44}

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Domain
@@ -27,7 +26,6 @@ namespace VG.MasterpieceCatalog.Domain
 
     public Masterpiece()
     {
-
     }
 
     public Masterpiece(IEnumerable<IEvent> history)
@@ -40,6 +38,7 @@ namespace VG.MasterpieceCatalog.Domain
       Id = id;
       Name = name;
       Price = price;
+      PublishEvent(new MasterpieceCreatedEvent() { AggregateId = Id, Name = Name, Price = Price, Version = Version });
     }
 
     public void Buy(CustomerId customerId)

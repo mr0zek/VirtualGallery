@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VG.MasterpieceCatalog\VG.MasterpieceCatalog.csproj" />
+    <ProjectReference Include="..\VG.MasterpieceCatalog.Application\VG.MasterpieceCatalog.Application.csproj" />
+    <ProjectReference Include="..\VG.MasterpieceCatalog.Infrastructure\VG.MasterpieceCatalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\VG.Notification\VG.Notification.csproj" />
   </ItemGroup>
 
   <ItemGroup>

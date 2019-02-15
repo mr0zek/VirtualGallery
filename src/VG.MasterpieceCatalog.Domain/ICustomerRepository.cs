@@ -1,7 +1,4 @@
-﻿using VG.MasterpieceCatalog.Application.Commands.ReserveMasterpiece;
-using VG.MasterpieceCatalog.Domain;
-
-namespace VG.MasterpieceCatalog.Application
+﻿namespace VG.MasterpieceCatalog.Domain
 {
   public interface ICustomerRepository
   {

@@ -1,16 +1,21 @@
 ﻿using System;
+using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Domain
 {
   public class MasterpieceReservedEvent : IEvent
   {
-    public MasterpieceId Id { get; }
-    public CustomerId CustomerId { get; }
-    public int Version { get; }
+    public string AggregateId { get; set; }
+    public CustomerId CustomerId { get; set; }
+    public int Version { get; set; }
+
+    public MasterpieceReservedEvent()
+    {
+    }
 
     public MasterpieceReservedEvent(MasterpieceId id, CustomerId customerId, int version)
     {
-      Id = id;
+      AggregateId = id;
       CustomerId = customerId;
       Version = version;
     }

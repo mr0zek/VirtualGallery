@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using VG.MasterpieceCatalog.Application.Infrastructure;
 using VG.MasterpieceCatalog.Infrastructure;
 using VG.MasterpieceCatalog.Perspective;
 
@@ -43,9 +44,8 @@ namespace VG.MasterpieceCatalog.Application
       });
 
       var builder = new ContainerBuilder();
-      builder.RegisterAssemblyModules(GetType().Assembly);
-      builder.RegisterModule<PerspectiveAutofacModule>();
-      builder.RegisterModule<InfrastructureAutofacModule>();
+      string connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+      builder.RegisterModule(new MasterpieceAutofacModule(connectionString));
       RegisterExternalTypes(builder);      
       builder.Populate(services);
       var container = builder.Build();

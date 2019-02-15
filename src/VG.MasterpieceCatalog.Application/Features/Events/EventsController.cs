@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using VG.MasterpieceCatalog.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Application.Features.Events
 {
@@ -8,17 +9,17 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
   [ApiController]
   public class EventsController : Controller
   {
-    private readonly IEventRepository _eventRepository;
+    private readonly IEventStore _eventRepository;
 
-    public EventsController(IEventRepository eventRepository)
+    public EventsController(IEventStore eventRepository)
     {
       _eventRepository = eventRepository;
     }
 
     [HttpGet()]
-    public ActionResult<MasterpieceEvent[]> Get([FromQuery]Guid startEventId, [FromQuery]int count)
+    public ActionResult<MasterpieceEvent[]> Get([FromQuery]int lastEventId, [FromQuery]int count)
     {
-      return _eventRepository.Get(startEventId, count).ToArray();
+      return _eventRepository.GetFrom(lastEventId, count).Select(f=>new MasterpieceEvent(){ Id = f.Id, Event = f.Data }).ToArray();
     }
   }
 }

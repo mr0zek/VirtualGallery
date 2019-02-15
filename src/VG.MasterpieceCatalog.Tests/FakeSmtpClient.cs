@@ -1,4 +1,4 @@
-using VG.MasterpieceCatalog.Components.Notification.ExternalInterfaces;
+using VG.Notification.ExternalInterfaces;
 
 namespace VG.MasterpieceCatalog.Tests
 {
