@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Linq;
+using Autofac;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
-  class CustomerRepository : ICustomerRepository
-  {
-    public Customer Get(CustomerId custormerId)
-    {
-      return new Customer(true);
-    }
-  }
-
   class MasterpieceRepository : IMasterpieceRepository
   {
-    private IEventStore _eventStore;
+    private readonly IEventStore _eventStore;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public MasterpieceRepository(IEventStore eventStore)
+    public MasterpieceRepository(IEventStore eventStore, IDateTimeProvider dateTimeProvider)
     {
       _eventStore = eventStore;
+      _dateTimeProvider = dateTimeProvider;
     }
 
     public Masterpiece Get(MasterpieceId id)
@@ -30,7 +25,7 @@ namespace VG.MasterpieceCatalog.Infrastructure
         throw new IndexOutOfRangeException();
       }
 
-      Masterpiece m = new Masterpiece(events);
+      Masterpiece m = new Masterpiece(events, _dateTimeProvider);
       if (m.IsRemoved())
       {
         throw new IndexOutOfRangeException(id);
@@ -40,18 +35,15 @@ namespace VG.MasterpieceCatalog.Infrastructure
 
     public void Save(Masterpiece masterpiece, int? expectedVersion)
     {
-      if (_eventStore.HasEvents(masterpiece.Id))
+      var events = (masterpiece as IEventsAccesor).GetUncommittedChanges();
+      if (events.First().GetType().IsAssignableFrom(typeof(MasterpieceCreatedEvent)))
       {
-        throw new InvalidOperationException($"Object already exists : {masterpiece.Id}");
+        if (_eventStore.HasEvents(masterpiece.Id))
+        {
+          throw new InvalidOperationException($"Object already exists : {masterpiece.Id}");
+        }
       }
-      var events = (masterpiece as IEventsCollectionAccesor).GetUncommittedChanges();
       _eventStore.Save(masterpiece.Id, events, expectedVersion);
-    }
-
-    public void Delete(Masterpiece masterpiece)
-    {
-      var events = (masterpiece as IEventsCollectionAccesor).GetUncommittedChanges();
-      _eventStore.Save(masterpiece.Id, events, masterpiece.Version);
     }
   }
 }

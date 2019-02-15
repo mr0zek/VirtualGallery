@@ -1,15 +1,24 @@
+using System;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Xml;
 using Autofac;
+using Moq;
 using RestEase;
 using VG.MasterpieceCatalog.Application;
+using VG.MasterpieceCatalog.Contract;
+using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Infrastructure;
 using VG.Notification;
 using VG.Notification.ExternalInterfaces;
 using VG.Tests.BaseTypes;
 using Xunit;
+using MasterpieceBoughtEvent = VG.MasterpieceCatalog.Contract.MasterpieceBoughtEvent;
+using MasterpieceCreatedEvent = VG.MasterpieceCatalog.Contract.MasterpieceCreatedEvent;
+using MasterpieceRemovedEvent = VG.MasterpieceCatalog.Contract.MasterpieceRemovedEvent;
+using MasterpieceReservedEvent = VG.MasterpieceCatalog.Contract.MasterpieceReservedEvent;
+using RevokedMasterpieceReservationEvent = VG.MasterpieceCatalog.Contract.RevokedMasterpieceReservationEvent;
+
 
 namespace VG.Tests
 {
@@ -34,50 +43,51 @@ namespace VG.Tests
     {
       // Arrange     
       int port = 12121;
-      MasterpieceBootstrap.Run(new string[0], builder => { }, port, ConnectionString);
+      string customerId = "CustId1234";
+
+      Mock<ICustomerRepository> customerRepositoryMock = new Mock<ICustomerRepository>();
+      Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+      MasterpieceBootstrap.Run(new string[0], builder =>
+        {
+          builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
+          builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
+        }, port, ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
       NotificationBootstrap.Run(new string[0], builder =>
       {
         builder.RegisterType<FakeSmtpClient>().As<ISmtpClient>();
-      }, ConnectionString, masterpieceCatalogUrl);      
+      }, ConnectionString, masterpieceCatalogUrl);
+      customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
+      dateTimeProviderMock.Setup(f => f.Now()).Returns(DateTime.Parse("2019-01-01"));
 
       // Act
       var masterpieceApi = RestClient.For<IMasterpieceApi>(masterpieceCatalogUrl);
-      await masterpieceApi.PostMasterpiece(new CreateMasterpieceRequest()
+      await masterpieceApi.CreateMasterpiece(new CreateMasterpieceRequest()
       {
         Id = "m1",
         Name = "Test1",
-        Price = 15
+        Price = 15,
+        Produced = DateTime.Parse("2019-01-01")
       });
 
-      await masterpieceApi.PostMasterpieceReservation("m1", new MasterpieceReservationRequest()
-      {
-        CustomerId = "123"
-      });
+      await masterpieceApi.ReserveMasterpiece("m1", new ReserveMasterpieceRequest(){CustomerId = customerId});
 
-      Assert.True(FakeSmtpClient.Count == 1);
+      await masterpieceApi.RevokeMasterpieceReservation("m1", customerId);
 
+      await masterpieceApi.BuyMasterpiece("m1", new BuyMasterpieceRequest(){CustomerId = customerId});
+
+      await masterpieceApi.DeleteMasterpiece("m1");
+
+      var result = await masterpieceApi.GetEvents(null,10);
+
+      // Assert
+      Assert.Equal(5,result.Length);
+      Assert.IsType<MasterpieceCreatedEvent>(result[0].Event);
+      Assert.IsType<MasterpieceReservedEvent>(result[1].Event);
+      Assert.IsType<RevokedMasterpieceReservationEvent>(result[2].Event);
+      Assert.IsType<MasterpieceBoughtEvent>(result[3].Event);
+      Assert.IsType<MasterpieceRemovedEvent>(result[4].Event);
     }
-  }
-
-  public class MasterpieceReservationRequest
-  {
-    public string CustomerId { get; set; }
-  }
-
-  public interface IMasterpieceApi
-  {
-    [Post("api/masterpieces")]
-    Task PostMasterpiece([Body]CreateMasterpieceRequest request);
-
-    [Post("api/masterpieces/{id}/reservation")]
-    Task PostMasterpieceReservation([Path]string id, [Body]MasterpieceReservationRequest masterpieceReservationRequest);
-  }
-
-  public class CreateMasterpieceRequest
-  {
-    public decimal Price { get; set; }
-    public string Name { get; set; }
-    public string Id { get; set; }
   }
 }

@@ -69,7 +69,7 @@ namespace VG.MasterpieceCatalog.Infrastructure
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return connection.Query("select 1 from Events where id = @aggregateId", new {aggregateId}).Any();
+        return connection.Query("select 1 from Events where aggregateId = @aggregateId", new {aggregateId}).Any();
       }
     }
 

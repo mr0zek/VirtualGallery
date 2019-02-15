@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Domain
 {
   public class Masterpiece : AggregateRootES
   {
+    private readonly IDateTimeProvider _dateTimeProvider;
     private string _name;
     private Money _price;
+    private DateTime _produced;
+
     /// <summary>
     /// customers who bought the masterpiece
     /// </summary>
@@ -14,16 +18,12 @@ namespace VG.MasterpieceCatalog.Domain
     private CustomerId _reservationCustomerId;
     private bool _isRemoved;
 
-    public Masterpiece(IEnumerable<IEvent> history)
-    {
-      LoadsFromHistory(history);
-    }
-
     private void Apply(MasterpieceCreatedEvent @event)
     {
       Id = @event.AggregateId;
       _name = @event.Name;
-      _price = @event.Price;      
+      _price = @event.Price;
+      _produced = @event.Produced;
     }
 
     private void Apply(MasterpieceRemovedEvent @event)
@@ -41,19 +41,31 @@ namespace VG.MasterpieceCatalog.Domain
       _reservationCustomerId = null;      
     }
 
-    public Masterpiece(MasterpieceId id, string name, Money price)
+    internal Masterpiece(MasterpieceId id, string name, Money price, DateTime produced, IDateTimeProvider dateTimeProvider)
     {
       Id = id;
       _name = name;
       _price = price;
-      PublishEvent(new MasterpieceCreatedEvent() { AggregateId = Id, Name = _name, Price = _price });
+      _produced = produced;
+      _dateTimeProvider = dateTimeProvider;
+      PublishEvent(new MasterpieceCreatedEvent() { AggregateId = Id, Name = _name, Price = _price, Produced = _produced});
+    }
+
+    public Masterpiece(IEnumerable<IEvent> events, IDateTimeProvider dateTimeProvider)
+    {
+      _dateTimeProvider = dateTimeProvider;
+      LoadsFromHistory(events);
     }
 
     public void Buy(CustomerId customerId)
     {
-      if (_reservationCustomerId != customerId)
+      if (_produced.AddYears(100) < _dateTimeProvider.Now())
       {
-        throw new DomainException("Can be bought");
+        throw new DomainException("Can't be bought, too young to sell");
+      }
+      if (_reservationCustomerId != null && _reservationCustomerId != customerId)
+      {
+        throw new DomainException("Can't be bought, already reserved by different user");
       }
 
       if (_customersIds.Contains(customerId))

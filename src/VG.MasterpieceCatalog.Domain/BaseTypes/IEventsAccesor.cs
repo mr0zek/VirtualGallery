@@ -2,7 +2,7 @@
 
 namespace VG.MasterpieceCatalog.Domain.BaseTypes
 {
-  public interface IEventsCollectionAccesor
+  public interface IEventsAccesor
   {
     IEnumerable<IEvent> GetUncommittedChanges();
   }

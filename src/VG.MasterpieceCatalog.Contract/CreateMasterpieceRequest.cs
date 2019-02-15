@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 
-namespace VG.MasterpieceCatalog.Application.Features.CreateMasterpiece
+namespace VG.MasterpieceCatalog.Contract
 {
   public class CreateMasterpieceRequest
-
   {
     public decimal Price { get; set; }
     public string Name { get; set; }

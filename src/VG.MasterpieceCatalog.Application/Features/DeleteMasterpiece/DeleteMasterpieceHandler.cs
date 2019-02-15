@@ -15,7 +15,8 @@ namespace VG.MasterpieceCatalog.Application.Features.DeleteMasterpiece
     public void Handle(DeleteMasterpieceCommand command)
     {
       Domain.Masterpiece m = _masterpieceRepository.Get(command.Id);
-      _masterpieceRepository.Delete(m);
+      m.Remove();
+      _masterpieceRepository.Save(m, command.ExpectedVersion);
     }
   }
 }

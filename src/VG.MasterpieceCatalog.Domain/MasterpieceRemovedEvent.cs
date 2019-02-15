@@ -6,9 +6,9 @@ namespace VG.MasterpieceCatalog.Domain
   {
     public string AggregateId { get; set; }
 
-    public MasterpieceRemovedEvent(MasterpieceId id)
+    public MasterpieceRemovedEvent(MasterpieceId aggregateId)
     {
-      AggregateId = id;
+      AggregateId = aggregateId;
     }    
   }
 }

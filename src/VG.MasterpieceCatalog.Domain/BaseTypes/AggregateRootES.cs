@@ -7,14 +7,14 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
   /// <summary>
   /// AggregateRoot for EventStore
   /// </summary>
-  public class AggregateRootES : IEventsCollectionAccesor
+  public class AggregateRootES : IEventsAccesor
   {
     private readonly List<IEvent> _changes = new List<IEvent>();
 
     public string Id { get; protected set; }
     public int Version { get; internal set; }
 
-    IEnumerable<IEvent> IEventsCollectionAccesor.GetUncommittedChanges()
+    IEnumerable<IEvent> IEventsAccesor.GetUncommittedChanges()
     {
       return _changes;
     }

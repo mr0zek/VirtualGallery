@@ -11,7 +11,22 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
 
     public bool Equals(ValueObject other)
     {
-      throw new NotImplementedException();
+      var a = GetEqualityComponents().ToList();
+      var b = other.GetEqualityComponents().ToList();
+      if (a.Count != b.Count)
+      {
+        return false;
+      }
+
+      for (int i = 0; i < a.Count; i++)
+      {
+        if (!a[i].Equals(b[i]))
+        {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     public override bool Equals(object obj)

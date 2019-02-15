@@ -1,7 +1,17 @@
-﻿using VG.MasterpieceCatalog.Domain.BaseTypes;
+﻿using System;
+using VG.MasterpieceCatalog.Domain;
+using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
+  public class DateTimeProvider : IDateTimeProvider
+  {
+    public DateTime Now()
+    {
+      return DateTime.Now;
+    }
+  }
+
   public class Event
   {
     public int Id { get; set; }

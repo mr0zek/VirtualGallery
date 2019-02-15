@@ -12,9 +12,9 @@ namespace VG.MasterpieceCatalog.Domain
     {
     }
 
-    public MasterpieceReservedEvent(MasterpieceId id, CustomerId customerId)
+    public MasterpieceReservedEvent(MasterpieceId aggregateId, CustomerId customerId)
     {
-      AggregateId = id;
+      AggregateId = aggregateId;
       CustomerId = customerId;      
     }
   }
