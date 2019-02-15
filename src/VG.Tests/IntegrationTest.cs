@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using RestEase;
 using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Infrastructure;
-using VG.MasterpieceCatalog.Tests.BaseTypes;
 using VG.Notification;
 using VG.Notification.ExternalInterfaces;
+using VG.Tests.BaseTypes;
 using Xunit;
 
-namespace VG.MasterpieceCatalog.Tests
+namespace VG.Tests
 {
   public class IntegrationTest : DbTestFixture
   {
@@ -20,7 +18,7 @@ namespace VG.MasterpieceCatalog.Tests
     }
 
     [Fact]
-    public void Test1()
+    public async void Test1()
     {
       // Arrange     
       int port = 12121;
@@ -33,13 +31,14 @@ namespace VG.MasterpieceCatalog.Tests
 
       // Act
       var masterpieceApi = RestClient.For<IMasterpieceApi>(masterpieceCatalogUrl);
-      masterpieceApi.PostMasterpiece(new MasterpieceCreateRequest()
+      await masterpieceApi.PostMasterpiece(new MasterpieceCreateRequest()
       {
         MasterpieceId = "m1",
         Name = "Test1",
         Price = 15
-      }).Wait();
-      masterpieceApi.PostMasterpieceReservation("m1", new MasterpieceReservationRequest()
+      });
+
+      await masterpieceApi.PostMasterpieceReservation("m1", new MasterpieceReservationRequest()
       {
         CustomerId = "123"
       });
@@ -60,7 +59,7 @@ namespace VG.MasterpieceCatalog.Tests
     Task PostMasterpiece([Body]MasterpieceCreateRequest request);
 
     [Post("api/masterpieces/{id}/reservation")]
-    void PostMasterpieceReservation([Path]string id, [Body]MasterpieceReservationRequest masterpieceReservationRequest);
+    Task PostMasterpieceReservation([Path]string id, [Body]MasterpieceReservationRequest masterpieceReservationRequest);
   }
 
   public class MasterpieceCreateRequest

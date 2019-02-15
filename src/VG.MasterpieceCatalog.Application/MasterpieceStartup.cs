@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using VG.MasterpieceCatalog.Application.Infrastructure;
 using VG.MasterpieceCatalog.Infrastructure;
 using VG.MasterpieceCatalog.Perspective;
+using FluentValidation.AspNetCore;
 
 namespace VG.MasterpieceCatalog.Application
 {
@@ -28,7 +29,9 @@ namespace VG.MasterpieceCatalog.Application
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
       // Add framework services.
-      services.AddMvc();
+      services
+        .AddMvc(opt => opt.Filters.Add(typeof(FluentValidationActionFilter)))
+        .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<MasterpieceStartup>());
 
       services.AddLogging(loggingBuilder =>
       {
@@ -46,7 +49,7 @@ namespace VG.MasterpieceCatalog.Application
       var builder = new ContainerBuilder();
       string connectionString = Configuration["ConnectionStrings:DefaultConnection"];
       builder.RegisterModule(new MasterpieceAutofacModule(connectionString));
-      RegisterExternalTypes(builder);      
+      RegisterExternalTypes(builder);
       builder.Populate(services);
       var container = builder.Build();
       return new AutofacServiceProvider(container);

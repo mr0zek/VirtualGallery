@@ -1,4 +1,4 @@
-﻿namespace VG.Notification.Features.MasterpieceReservationNotification
+﻿namespace VG.Notification.Infrastructure
 {
   public interface IEventListener<T>
   {

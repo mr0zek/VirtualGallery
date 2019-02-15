@@ -1,4 +1,5 @@
 ﻿using VG.Notification.ExternalInterfaces;
+using VG.Notification.Infrastructure;
 
 namespace VG.Notification.Features.MasterpieceReservationNotification
 {

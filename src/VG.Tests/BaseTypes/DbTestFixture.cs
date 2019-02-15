@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Dapper;
-using Hangfire.Logging;
-using VG.MasterpieceCatalog.Application.Infrastructure;
 
-namespace VG.MasterpieceCatalog.Tests.BaseTypes
+namespace VG.Tests.BaseTypes
 {
   public class DbTestFixture 
   {

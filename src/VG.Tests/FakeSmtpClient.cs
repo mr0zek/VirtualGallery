@@ -1,6 +1,6 @@
 using VG.Notification.ExternalInterfaces;
 
-namespace VG.MasterpieceCatalog.Tests
+namespace VG.Tests
 {
   public class FakeSmtpClient : ISmtpClient
   {

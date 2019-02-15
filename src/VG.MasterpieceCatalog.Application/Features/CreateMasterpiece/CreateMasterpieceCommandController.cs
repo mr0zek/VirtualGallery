@@ -15,9 +15,9 @@ namespace VG.MasterpieceCatalog.Application.Features.CreateMasterpiece
     }
 
     [HttpPost]
-    public void Post([FromBody] MasterpiecePostModel model)
+    public void Post([FromBody] CreateMasterpieceRequest model)
     {
-      _createMasterpieceHandler.Handle(new CreateMasterpieceCommand(model.MasterpieceId, model.Name, model.Price));
+      _createMasterpieceHandler.Handle(new CreateMasterpieceCommand(model.Id, model.Name, model.Price));
     }
   }
 }

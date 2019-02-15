@@ -14,7 +14,7 @@ namespace VG.MasterpieceCatalog.Application.Features.CreateMasterpiece
 
     public void Handle(CreateMasterpieceCommand command)
     {
-      Domain.Masterpiece m = new Domain.Masterpiece(command.Id, command.Name, command.Price);
+      Masterpiece m = new Masterpiece(command.Id, command.Name, command.Price);
       _masterpieceRepository.Save(m);
     }
   }
