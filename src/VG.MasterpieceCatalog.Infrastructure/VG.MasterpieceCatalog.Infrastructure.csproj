@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VG.MasterpieceCatalog.Domain\VG.MasterpieceCatalog.Domain.csproj" />
+    <ProjectReference Include="..\VG.MasterpieceCatalog.Perspective\VG.MasterpieceCatalog.Perspective.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace VG.MasterpieceCatalog.Contract
 {
-  public class MasterpieceRemovedEvent : IEvent
+  public class MasterpieceRemovedEvent : Event
   {
     public string AggregateId { get; set; }
   }

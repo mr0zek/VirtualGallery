@@ -48,7 +48,7 @@ namespace VG.MasterpieceCatalog.Domain
       _price = price;
       _produced = produced;
       _dateTimeProvider = dateTimeProvider;
-      PublishEvent(new MasterpieceCreatedEvent() { AggregateId = Id, Name = _name, Price = _price, Produced = _produced});
+      PublishEvent(new MasterpieceCreatedEvent(Id, name, produced, price));
     }
 
     public Masterpiece(IEnumerable<IEvent> events, IDateTimeProvider dateTimeProvider)

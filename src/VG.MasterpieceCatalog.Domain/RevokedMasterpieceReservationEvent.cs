@@ -8,7 +8,7 @@ namespace VG.MasterpieceCatalog.Domain
     public string AggregateId { get; set; }
     public string CustomerId { get; }
 
-    public RevokedMasterpieceReservationEvent(MasterpieceId aggregateId, CustomerId customerId)
+    public RevokedMasterpieceReservationEvent(string aggregateId, string customerId)
     {
       AggregateId = aggregateId;
       CustomerId = customerId;

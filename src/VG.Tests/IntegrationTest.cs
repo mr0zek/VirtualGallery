@@ -9,8 +9,7 @@ using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Infrastructure;
-using VG.Notification;
-using VG.Notification.ExternalInterfaces;
+using VG.MasterpieceCatalog.Perspective;
 using VG.Tests.BaseTypes;
 using Xunit;
 using MasterpieceBoughtEvent = VG.MasterpieceCatalog.Contract.MasterpieceBoughtEvent;
@@ -34,7 +33,7 @@ namespace VG.Tests
       
       log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
 
-      new DatabaseMigrator().Migrate(ConnectionString);
+      new MasterpieceDatabaseMigrator().Migrate(ConnectionString);
     }
 
     [Fact]
@@ -54,10 +53,8 @@ namespace VG.Tests
           builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
         }, port, ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
-      NotificationBootstrap.Run(new string[0], builder =>
-      {
-        builder.RegisterType<FakeSmtpClient>().As<ISmtpClient>();
-      }, ConnectionString, masterpieceCatalogUrl);
+      PerspectiveBootstrap.Run(new string[0], builder => { }, ConnectionString, masterpieceCatalogUrl);
+
       customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
       dateTimeProviderMock.Setup(f => f.Now()).Returns(DateTime.Parse("2019-01-01"));
 
@@ -79,15 +76,18 @@ namespace VG.Tests
 
       await masterpieceApi.DeleteMasterpiece("m1");
 
-      var result = await masterpieceApi.GetEvents(null,10);
+      var masterpieceEventsApi = RestClient.For<IMasterpieceEventsApi>(masterpieceCatalogUrl);
+
+
+      var result = await masterpieceEventsApi.GetEvents(null,10);
 
       // Assert
       Assert.Equal(5,result.Length);
-      Assert.IsType<MasterpieceCreatedEvent>(result[0].Event);
-      Assert.IsType<MasterpieceReservedEvent>(result[1].Event);
-      Assert.IsType<RevokedMasterpieceReservationEvent>(result[2].Event);
-      Assert.IsType<MasterpieceBoughtEvent>(result[3].Event);
-      Assert.IsType<MasterpieceRemovedEvent>(result[4].Event);
+      Assert.IsType<MasterpieceCreatedEvent>(result[0]);
+      Assert.IsType<MasterpieceReservedEvent>(result[1]);
+      Assert.IsType<RevokedMasterpieceReservationEvent>(result[2]);
+      Assert.IsType<MasterpieceBoughtEvent>(result[3]);
+      Assert.IsType<MasterpieceRemovedEvent>(result[4]);
     }
   }
 }

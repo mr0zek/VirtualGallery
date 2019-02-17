@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
 
-namespace VG.MasterpieceCatalog.Infrastructure
+namespace VG.MasterpieceCatalog.Infrastructure.SqlEventStore
 {
   public interface IEventStore
   {

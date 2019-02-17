@@ -17,9 +17,6 @@ namespace VG.MasterpieceCatalog.Contract
     [Delete("api/masterpieces/{id}/reservations/{customerId}")]
     Task RevokeMasterpieceReservation([Path]string id, [Path]string customerId);
 
-    [Get("api/events")]
-    Task<MasterpieceEvent[]> GetEvents([Query]int? lastEventId, [Query]int? count);
-
     [Post("api/masterpieces/{id}/buyers")]
     Task BuyMasterpiece([Path]string id, [Body]BuyMasterpieceRequest request);
   }

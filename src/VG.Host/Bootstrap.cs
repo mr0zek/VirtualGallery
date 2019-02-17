@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Xml;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Infrastructure;
-using VG.Notification;
+using VG.MasterpieceCatalog.Perspective;
+using VG.MasterpieceCatalog.Perspective.Migrations;
 
 namespace VG.Host
 {
@@ -20,10 +16,11 @@ namespace VG.Host
       var connectionString = configuration["ConnectionStrings:DefaultConnection"];
       var masterpieceCatalogUrl = configuration["MasterpieceCatoalog:Port"];
 
-      new DatabaseMigrator().Migrate(connectionString);
+      new PerspectiveDatabaseMigrator().Migrate(connectionString);
+      new MasterpieceDatabaseMigrator().Migrate(connectionString);
 
       MasterpieceBootstrap.Run(args, builder => { }, 12121);
-      NotificationBootstrap.Run(args, builder => { }, connectionString, masterpieceCatalogUrl);
+      PerspectiveBootstrap.Run(args, builder => { }, connectionString, masterpieceCatalogUrl);
     }
   }  
 }

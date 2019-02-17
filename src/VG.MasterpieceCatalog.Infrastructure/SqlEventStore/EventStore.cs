@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using Newtonsoft.Json;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
 
-namespace VG.MasterpieceCatalog.Infrastructure
+namespace VG.MasterpieceCatalog.Infrastructure.SqlEventStore
 {
   internal class EventStore : IEventStore
   {

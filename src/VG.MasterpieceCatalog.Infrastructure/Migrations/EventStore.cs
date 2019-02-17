@@ -3,7 +3,7 @@
 namespace VG.MasterpieceCatalog.Infrastructure.Migrations
 {
   [Migration(201902141512)]
-  public class EventStore : Migration
+  public class EventStoreMigration : Migration
   {
     public override void Up()
     {

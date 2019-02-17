@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
-  public class DatabaseMigrator
+  public class MasterpieceDatabaseMigrator
   {
     public void Migrate(string connectionString)
     {
@@ -14,7 +14,7 @@ namespace VG.MasterpieceCatalog.Infrastructure
         .ConfigureRunner(rb => rb
           .AddSqlServer()
           .WithGlobalConnectionString(connectionString)
-          .ScanIn(typeof(DatabaseMigrator).Assembly).For.Migrations())
+          .ScanIn(typeof(MasterpieceDatabaseMigrator).Assembly).For.Migrations())
           .AddLogging(lb => lb.AddFluentMigratorConsole())
           .BuildServiceProvider(false);
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using VG.MasterpieceCatalog.Infrastructure;
+using VG.MasterpieceCatalog.Infrastructure.SqlEventStore;
 
 namespace VG.MasterpieceCatalog.Application.Features.Events
 {
@@ -17,7 +17,7 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
     }
 
     [HttpGet()]
-    public ActionResult<MasterpieceEvent[]> Get([FromQuery]int? lastEventId, [FromQuery]int? count)
+    public ActionResult<object[]> Get([FromQuery]int? lastEventId, [FromQuery]int? count)
     {
       if (count == null)
       {

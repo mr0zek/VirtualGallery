@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -23,29 +24,31 @@ namespace VG.MasterpieceCatalog.Contract
         return serializer.Deserialize(reader, objectType);
       }
 
-      MasterpieceEvent masterpieceEvent = new MasterpieceEvent();
+      Event masterpieceEvent = null;
       JObject obj = JObject.Load(reader);
-      masterpieceEvent.Id = obj[nameof(MasterpieceEvent.Id).ToLower()].Value<int>();
-      masterpieceEvent.Type = obj[nameof(MasterpieceEvent.Type).ToLower()].Value<string>();
-      masterpieceEvent.Version = obj[nameof(MasterpieceEvent.Version).ToLower()].Value<int>();
-      switch (obj[nameof(MasterpieceEvent.Type).ToLower()].Value<string>())
+      switch (obj[nameof(Event.Type).ToLower()].Value<string>())
       {
         case nameof(MasterpieceCreatedEvent):
-          masterpieceEvent.Event = JsonConvert.DeserializeObject<MasterpieceCreatedEvent>(obj[nameof(MasterpieceEvent.Event).ToLower()].ToString());
+          masterpieceEvent = JsonConvert.DeserializeObject<MasterpieceCreatedEvent>(obj.ToString());
           break;
         case nameof(MasterpieceBoughtEvent):
-          masterpieceEvent.Event = JsonConvert.DeserializeObject<MasterpieceBoughtEvent>(obj[nameof(MasterpieceEvent.Event).ToLower()].ToString());
+          masterpieceEvent= JsonConvert.DeserializeObject<MasterpieceBoughtEvent>(obj.ToString());
           break;
         case nameof(MasterpieceRemovedEvent):
-          masterpieceEvent.Event = JsonConvert.DeserializeObject<MasterpieceRemovedEvent>(obj[nameof(MasterpieceEvent.Event).ToLower()].ToString());
+          masterpieceEvent = JsonConvert.DeserializeObject<MasterpieceRemovedEvent>(obj.ToString());
           break;
         case nameof(RevokedMasterpieceReservationEvent):
-          masterpieceEvent.Event = JsonConvert.DeserializeObject<RevokedMasterpieceReservationEvent>(obj[nameof(MasterpieceEvent.Event).ToLower()].ToString());
+          masterpieceEvent = JsonConvert.DeserializeObject<RevokedMasterpieceReservationEvent>(obj.ToString());
           break;
         case nameof(MasterpieceReservedEvent):
-          masterpieceEvent.Event = JsonConvert.DeserializeObject<MasterpieceReservedEvent>(obj[nameof(MasterpieceEvent.Event).ToLower()].ToString());
+          masterpieceEvent = JsonConvert.DeserializeObject<MasterpieceReservedEvent>(obj.ToString());
           break;
+        default:
+          throw new SerializationException("Unknown type: "+ obj[nameof(Event.Type).ToLower()].Value<string>());
       }
+      masterpieceEvent.Id = obj[nameof(Event.Id).ToLower()].Value<int>();
+      masterpieceEvent.Type = obj[nameof(Event.Type).ToLower()].Value<string>();
+      masterpieceEvent.Version = obj[nameof(Event.Version).ToLower()].Value<int>();
 
       return masterpieceEvent;
     }

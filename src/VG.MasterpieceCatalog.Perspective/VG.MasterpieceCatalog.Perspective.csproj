@@ -6,6 +6,28 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.0" />
+    <PackageReference Include="Dapper" Version="1.50.1" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.1.3" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.6.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VG.MasterpieceCatalog.Contract\VG.MasterpieceCatalog.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FluentMigrator">
+      <HintPath>..\..\..\..\Users\mr0zek\.nuget\packages\fluentmigrator\3.1.3\lib\netstandard2.0\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentMigrator.Runner">
+      <HintPath>..\..\..\..\Users\mr0zek\.nuget\packages\fluentmigrator.runner\3.1.3\lib\netstandard2.0\FluentMigrator.Runner.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core">
+      <HintPath>..\..\..\..\Users\mr0zek\.nuget\packages\hangfire.core\1.6.22\lib\netstandard1.3\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection">
+      <HintPath>..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.dependencyinjection\2.2.0\lib\netcoreapp2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System.Linq;
 using Autofac;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
+using VG.MasterpieceCatalog.Infrastructure.SqlEventStore;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {

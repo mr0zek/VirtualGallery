@@ -33,12 +33,6 @@ namespace VG.MasterpieceCatalog.Application
         .AddMvc(opt => opt.Filters.Add(typeof(FluentValidationActionFilter)))
         .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<MasterpieceStartup>());
 
-      services.AddLogging(loggingBuilder =>
-      {
-        loggingBuilder
-          .AddLog4Net("log4net.config");
-      });
-
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new Info { Title = "Masterpiece API", Version = "v1" });
@@ -56,7 +50,7 @@ namespace VG.MasterpieceCatalog.Application
 
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
     {
       if (env.IsDevelopment())
       {
@@ -67,6 +61,8 @@ namespace VG.MasterpieceCatalog.Application
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
       }
+
+      loggerFactory.AddLog4Net("log4net.config");
 
       app.UseMiddleware<ErrorHandlingMiddleware>();
       app.UseSwagger();

@@ -8,14 +8,10 @@ namespace VG.MasterpieceCatalog.Domain
     public string AggregateId { get; set; }
     public string CustomerId { get; set; }
 
-    public MasterpieceReservedEvent()
-    {
-    }
-
-    public MasterpieceReservedEvent(MasterpieceId aggregateId, CustomerId customerId)
+    public MasterpieceReservedEvent(string aggregateId, string customerId)
     {
       AggregateId = aggregateId;
-      CustomerId = customerId;      
+      CustomerId = customerId;
     }
   }
 }

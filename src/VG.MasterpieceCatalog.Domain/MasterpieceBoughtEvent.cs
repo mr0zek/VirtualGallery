@@ -9,7 +9,7 @@ namespace VG.MasterpieceCatalog.Domain
 
     public string CustomerId { get; }
 
-    public MasterpieceBoughtEvent(MasterpieceId aggregateId, CustomerId customerId)
+    public MasterpieceBoughtEvent(string aggregateId, string customerId)
     {
       AggregateId = aggregateId;
       CustomerId = customerId;

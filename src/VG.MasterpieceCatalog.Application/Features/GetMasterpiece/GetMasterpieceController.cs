@@ -9,23 +9,23 @@ namespace VG.MasterpieceCatalog.Application.Features.GetMasterpiece
   [ApiController]
   public class GetMasterpieceController : Controller
   {
-    private readonly IMasterpiecePerspective _masterpiecePerspective;
+    private readonly IMasterpiecePerspectiveRepository _masterpiecePerspectiveRepository;
 
-    public GetMasterpieceController(IMasterpiecePerspective masterpiecePerspective)
+    public GetMasterpieceController(IMasterpiecePerspectiveRepository masterpiecePerspectiveRepository)
     {
-      _masterpiecePerspective = masterpiecePerspective;
+      _masterpiecePerspectiveRepository = masterpiecePerspectiveRepository;
     }
 
     [HttpGet]
     public ActionResult<IEnumerable<MasterpiecePerspectiveResponse>> Get()
     {
-      return Json(_masterpiecePerspective.GetMany(100));
+      return Json(_masterpiecePerspectiveRepository.GetMany());
     }
 
     [HttpGet("{id}")]
-    public ActionResult<MasterpiecePerspectiveResponse> Get(Guid id)
+    public ActionResult<MasterpiecePerspectiveResponse> Get(string id)
     {
-      return Json(_masterpiecePerspective.Get(id));
+      return Json(_masterpiecePerspectiveRepository.Get(id));
     }    
   }
 }

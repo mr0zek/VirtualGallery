@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using VG.MasterpieceCatalog.Infrastructure.SqlEventStore;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {

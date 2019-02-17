@@ -1,8 +1,6 @@
 ﻿using Autofac;
-using Autofac.Features.ResolveAnything;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Infrastructure;
-using VG.MasterpieceCatalog.Perspective;
 
 namespace VG.MasterpieceCatalog.Application.Infrastructure
 {
@@ -22,7 +20,6 @@ namespace VG.MasterpieceCatalog.Application.Infrastructure
         .InstancePerLifetimeScope();
 
       builder.RegisterModule(new InfrastructureAutofacModule(_connectionString));
-      builder.RegisterModule(new PerspectiveAutofacModule(_connectionString));
       builder.RegisterType<MasterpieceFactory>().AsImplementedInterfaces();
     }
   }
