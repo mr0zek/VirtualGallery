@@ -10,22 +10,22 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
   public class EventsController : Controller
   {
     private readonly IEventStore _eventRepository;
+      private IEventsConverter _converter;
 
-    public EventsController(IEventStore eventRepository)
+      public EventsController(IEventStore eventRepository)
     {
       _eventRepository = eventRepository;
     }
 
     [HttpGet()]
-    public ActionResult<object[]> Get([FromQuery]int? lastEventId, [FromQuery]int? count)
+    public ActionResult<Contract.Event[]> Get([FromQuery]int? lastEventId, [FromQuery]int? count)
     {
       if (count == null)
       {
         count = 100;
       }      
       return _eventRepository.GetFrom(lastEventId, count.Value)
-        .Select(f=>new MasterpieceEvent()
-          { Id = f.Id, Type = f.Data.GetType().Name, Version = f.Version, Event = f.Data }).ToArray();
+        .Select(f=> _converter.Convert(f)).ToArray();
     }
   }
 }
