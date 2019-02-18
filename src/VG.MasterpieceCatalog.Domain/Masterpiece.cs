@@ -41,7 +41,7 @@ namespace VG.MasterpieceCatalog.Domain
       _reservationCustomerId = null;      
     }
 
-    internal Masterpiece(MasterpieceId id, string name, Money price, DateTime produced, IDateTimeProvider dateTimeProvider)
+    public Masterpiece(MasterpieceId id, string name, Money price, DateTime produced, IDateTimeProvider dateTimeProvider)
     {
       Id = id;
       _name = name;
