@@ -16,9 +16,9 @@ using Xunit;
 
 namespace VG.Tests
 {
-  public class IntegrationTest : DbTestFixture
+  public class IntegrationTests : DbTestFixture
   {
-    public IntegrationTest() : base(@"Server=(local);Database=Test;Integrated Security=true;")
+    public IntegrationTests() : base(@"Server=(local);Database=Test;Integrated Security=true;")
     {
       XmlDocument log4netConfig = new XmlDocument();
       log4netConfig.Load(File.OpenRead("log4net.config"));

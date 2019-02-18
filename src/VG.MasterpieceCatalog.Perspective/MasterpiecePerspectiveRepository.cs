@@ -24,14 +24,7 @@ namespace VG.MasterpieceCatalog.Perspective
         var ms = await connection.QueryFirstAsync<MasterpieceModelState>(
           @"select Id,Version,Name,Price,IsRemoved, CustomerId 
              from Masterpieces where Id = @Id", new {id});
-        return new MasterpieceModel()
-        {
-          Name = ms.Name,
-          Price = ms.Price,
-          Id = ms.Id,
-          Version = ms.Version,
-          IsAvailable = !ms.IsRemoved && ms.CustomerId != null
-        };
+        return ms.ConvertToMasterpieceModel();
       }
     }
 
@@ -41,14 +34,7 @@ namespace VG.MasterpieceCatalog.Perspective
       {
         return new MasterpiecesModel((await connection.QueryAsync<MasterpieceModelState>(
           @"select Id,Version,Name,Price, IsRemoved, CustomerId from Masterpieces"))
-          .Select(ms => new MasterpieceModel()
-          {
-            Name = ms.Name,
-            Price = ms.Price,
-            Id = ms.Id,
-            Version = ms.Version,
-            IsAvailable = !ms.IsRemoved && ms.CustomerId != null
-          }));
+          .Select(ms => ms.ConvertToMasterpieceModel()));
       }
     }
 
@@ -60,6 +46,18 @@ namespace VG.MasterpieceCatalog.Perspective
       public decimal Price { get; set; }
       public bool IsRemoved { get; set; }
       public string CustomerId { get; set; }
+
+      public MasterpieceModel ConvertToMasterpieceModel()
+      {
+        return new MasterpieceModel()
+        {
+          Name = this.Name,
+          Price = this.Price,
+          Id = this.Id,
+          Version = this.Version,
+          IsAvailable = !this.IsRemoved
+        };
+      }
     }
   }
 }

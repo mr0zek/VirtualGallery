@@ -6,19 +6,14 @@ namespace VG.MasterpieceCatalog.Domain
 {
   public class Masterpiece : AggregateRoot
   {
-    private readonly IDateTimeProvider _dateTimeProvider;
     private string _name;
     private Money _price;
     private DateTime _produced;
-
-    /// <summary>
-    /// customers who bought the masterpiece
-    /// </summary>
     private CustomerId _customerId;
     private CustomerId _reservationCustomerId;
     private bool _isRemoved;
 
-    public Masterpiece(MasterpieceState state, IDateTimeProvider dateTimeProvider)
+    public Masterpiece(MasterpieceState state)
     {
       Id = state.Id;
       _name = state.Name;
@@ -26,25 +21,6 @@ namespace VG.MasterpieceCatalog.Domain
       _produced = state.Produced;
       Version = state.Version;
       _isRemoved = state.IsRemoved;
-      _dateTimeProvider = dateTimeProvider;
-    }
-
-    public void Buy(CustomerId customerId)
-    {
-      if (_customerId != null)
-      {
-        throw new DomainException("Already sold");
-      }
-      if (_produced.AddYears(10) < _dateTimeProvider.Now())
-      {
-        throw new DomainException("Can't be bought, too young to sell");
-      }
-      if (_reservationCustomerId != null && _reservationCustomerId != customerId)
-      {
-        throw new DomainException("Can't be bought, already reserved by different user");
-      }
-
-      _customerId = customerId;
     }
 
     public void Remove()
@@ -58,10 +34,6 @@ namespace VG.MasterpieceCatalog.Domain
 
     public void Reserve(CustomerId customerId, ICustomerRepository customerRepository)
     {
-      if (_customerId != null)
-      {
-        throw new DomainException("Already sold");
-      }
       if (!customerRepository.Get(customerId).CanReserve())
       {
         throw new DomainException("Only VIP Clients can reserve masterpieces");

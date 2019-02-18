@@ -7,17 +7,14 @@ namespace VG.MasterpieceCatalog.Application.Features.BuyMasterpiece
   [ApiController]
   public class BuyMasterpieceController : Controller
   {
-    private readonly ICommandHandler<BuyMasterpieceCommand> _buyMasterpieceHandler;
-    
-    public BuyMasterpieceController(ICommandHandler<BuyMasterpieceCommand> buyMasterpieceHandler)
+    public BuyMasterpieceController()
     {
-      _buyMasterpieceHandler = buyMasterpieceHandler;
     }
 
     [HttpPost("{id}/buyers")]
     public void PostBuyers(string id, int? expectedVersion, [FromBody] PostBuyerRequest postBuyer)
     {
-      _buyMasterpieceHandler.Handle(new BuyMasterpieceCommand(id, postBuyer.CustomerId));
+     
     }
   }
 }

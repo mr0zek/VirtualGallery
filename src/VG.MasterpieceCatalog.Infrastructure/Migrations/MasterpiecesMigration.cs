@@ -13,8 +13,7 @@ namespace VG.MasterpieceCatalog.Infrastructure.Migrations
         .WithColumn("Version").AsInt32().NotNullable()
         .WithColumn("Produced").AsDateTime().NotNullable()
         .WithColumn("Price").AsDouble().NotNullable()
-        .WithColumn("IsRemoved").AsBoolean().NotNullable()
-        .WithColumn("CustomerId").AsString(128).Nullable();
+        .WithColumn("IsRemoved").AsBoolean().NotNullable();
     }
 
     public override void Down()
