@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Perspective;
 
 namespace VG.MasterpieceCatalog.Application.Features.GetMasterpiece

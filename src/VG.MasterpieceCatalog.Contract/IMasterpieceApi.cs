@@ -11,6 +11,9 @@ namespace VG.MasterpieceCatalog.Contract
     [Delete("api/masterpieces/{id}")]
     Task DeleteMasterpiece([Path]string id);
 
+    [Get("api/masterpieces")]
+    Task<MasterpiecesModel> GetMasterPieces();
+
     [Post("api/masterpieces/{id}/reservations")]
     Task ReserveMasterpiece([Path]string id, [Body]ReserveMasterpieceRequest request);
 

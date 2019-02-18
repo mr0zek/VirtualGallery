@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using Dapper;
+using VG.MasterpieceCatalog.Contract;
 
 namespace VG.MasterpieceCatalog.Perspective
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using VG.MasterpieceCatalog.Contract;
 
 namespace VG.MasterpieceCatalog.Perspective
 {
@@ -9,14 +9,5 @@ namespace VG.MasterpieceCatalog.Perspective
     void Save(MasterpieceModel model);
     MasterpiecesModel GetMany();
     MasterpieceModel Get(string id);
-  }
-
-  public class MasterpiecesModel
-  {
-    public IEnumerable<MasterpieceModel> Masterpieces { get; set; }
-    public MasterpiecesModel(IEnumerable<MasterpieceModel> masterpieces)
-    {
-      Masterpieces = masterpieces;
-    }    
   }
 }
