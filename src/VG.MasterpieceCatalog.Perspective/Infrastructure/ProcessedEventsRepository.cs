@@ -1,4 +1,4 @@
-﻿namespace VG.Notification.Infrastructure
+﻿namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
   class ProcessedEventsRepository : IProcessedEventsRepository
   {

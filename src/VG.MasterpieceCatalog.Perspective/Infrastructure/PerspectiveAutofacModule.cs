@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using VG.Notification.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
@@ -24,6 +25,8 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
       builder.RegisterType<EventSubscriber>()
         .WithParameter("masterpieceCatalogUrl", _masterpieceCatalogUrl)
         .AsImplementedInterfaces();
+
+      builder.RegisterType<ProcessedEventsRepository>().AsImplementedInterfaces();
 
       builder.RegisterType<MasterpiecePerspectiveRepository>()
         .WithParameter("connectionString", _connectionString)
