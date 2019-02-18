@@ -21,26 +21,25 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
       _processedEventsRepository = processedEventsRepository;
     }
 
-    public int ProcessEvents(int eventsCount)
+    public async Task<int> ProcessEvents(int eventsCount)
     {
       IMasterpieceEventsApi api = new RestClient(_eventsUrl)
       {
         JsonSerializerSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects }
       }.For<IMasterpieceEventsApi>();
 
-      int lastProcessedEventId = _processedEventsRepository.GetLastProcessedEventId();
-      Task<MasterpieceEvents> events = api.GetEvents(lastProcessedEventId, eventsCount);
-      events.Wait();
-
-      foreach (var @event in events.Result.Events)
+      int lastProcessedEventId = await _processedEventsRepository.GetLastProcessedEventIdAsync();
+      MasterpieceEvents events = await api.GetEventsAsync(lastProcessedEventId, eventsCount);
+      
+      foreach (var @event in events.Events)
       {
         Type eventListenerType = typeof(IEventListener<>).MakeGenericType(@event.GetType());
         var eventListener = _container.Resolve(eventListenerType);
         eventListenerType.InvokeMember("Handle", BindingFlags.InvokeMethod, null, eventListener, new object[]{ @event });
-        _processedEventsRepository.SetLastProcessedEventId(@event.Id);
+        _processedEventsRepository.SetLastProcessedEventIdAsync(@event.Id);
       }
 
-      return events.Result.Events.Length;
+      return events.Events.Length;
     }
   }
 }

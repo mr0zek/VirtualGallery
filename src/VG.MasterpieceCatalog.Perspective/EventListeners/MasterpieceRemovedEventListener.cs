@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Perspective.Infrastructure;
 
@@ -17,9 +18,10 @@ namespace VG.MasterpieceCatalog.Perspective.EventListeners
 
     public void Handle(MasterpieceRemovedEvent obj)
     {
-      MasterpieceModel model = _masterpiecePerspectiveRepository.Get(obj.AggregateId);
-      model.IsAvailable = false;
-      _masterpiecePerspectiveRepository.Save(model);
+      Task<MasterpieceModel> model = _masterpiecePerspectiveRepository.GetAsync(obj.AggregateId);
+      model.Wait();
+      model.Result.IsAvailable = false;
+      _masterpiecePerspectiveRepository.Save(model.Result);
     }
   }
 }

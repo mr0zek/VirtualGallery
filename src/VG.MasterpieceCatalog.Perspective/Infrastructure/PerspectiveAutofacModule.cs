@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using VG.Notification.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {

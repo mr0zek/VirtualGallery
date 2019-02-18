@@ -1,8 +1,10 @@
-﻿namespace VG.MasterpieceCatalog.Perspective.Infrastructure
+﻿using System.Threading.Tasks;
+
+namespace VG.MasterpieceCatalog.Perspective
 {
   public interface IProcessedEventsRepository
   {
-    int GetLastProcessedEventId();
-    void SetLastProcessedEventId(int id);
+    Task<int> GetLastProcessedEventIdAsync();
+    Task SetLastProcessedEventIdAsync(int id);
   }
 }

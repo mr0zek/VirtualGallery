@@ -20,7 +20,7 @@ namespace VG.Host
       new MasterpieceDatabaseMigrator().Migrate(connectionString);
 
       MasterpieceBootstrap.Run(args, builder => { }, 12121);
-      PerspectiveBootstrap.Run(args, builder => { }, connectionString, eventsUrl);
+      PerspectiveBootstrap.Run(args, builder => { }, connectionString, "http://localhost:12121/");
     }
   }  
 }

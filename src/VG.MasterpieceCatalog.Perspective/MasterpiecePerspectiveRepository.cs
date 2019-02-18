@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Dapper;
 using VG.MasterpieceCatalog.Contract;
 
@@ -36,20 +37,20 @@ namespace VG.MasterpieceCatalog.Perspective
       }
     }
 
-    public MasterpieceModel Get(string aggregateId)
+    public async Task<MasterpieceModel> GetAsync(string aggregateId)
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return connection.QueryFirst<MasterpieceModel>(
+        return await connection.QueryFirstAsync<MasterpieceModel>(
            @"select AggregateId,Version,Name,Price from MasterpiecesPerspective where AggregateId = @AggregateId", new { aggregateId });
       }
     }
 
-    public MasterpiecesModel GetMany()
+    public async Task<MasterpiecesModel> GetManyAsync()
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return new MasterpiecesModel(connection.Query<MasterpieceModel>(@"select AggregateId,Version,Name,Price from MasterpiecesPerspective"));
+        return new MasterpiecesModel(await connection.QueryAsync<MasterpieceModel>(@"select AggregateId,Version,Name,Price from MasterpiecesPerspective"));
       }
     }
   }

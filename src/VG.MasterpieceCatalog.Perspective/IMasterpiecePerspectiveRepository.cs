@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using VG.MasterpieceCatalog.Contract;
 
 namespace VG.MasterpieceCatalog.Perspective
@@ -7,7 +8,7 @@ namespace VG.MasterpieceCatalog.Perspective
   {
     void Add(MasterpieceModel model);
     void Save(MasterpieceModel model);
-    MasterpiecesModel GetMany();
-    MasterpieceModel Get(string id);
+    Task<MasterpiecesModel> GetManyAsync();
+    Task<MasterpieceModel> GetAsync(string id);
   }
 }

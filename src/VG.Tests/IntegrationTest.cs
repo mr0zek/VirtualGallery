@@ -83,7 +83,7 @@ namespace VG.Tests
       }.For<IMasterpieceEventsApi>();
 
 
-      var result = await masterpieceEventsApi.GetEvents(null,10);
+      var result = await masterpieceEventsApi.GetEventsAsync(null,10);
 
       // Assert
       Assert.Equal(5,result.Events.Length);

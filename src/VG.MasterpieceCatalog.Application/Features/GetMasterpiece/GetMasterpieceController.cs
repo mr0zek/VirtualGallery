@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Perspective;
@@ -18,15 +19,15 @@ namespace VG.MasterpieceCatalog.Application.Features.GetMasterpiece
     }
 
     [HttpGet]
-    public ActionResult<MasterpiecesModel> Get()
+    public async Task<ActionResult<MasterpiecesModel>> GetAsync()
     {
-      return _masterpiecePerspectiveRepository.GetMany();
+      return await _masterpiecePerspectiveRepository.GetManyAsync();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<MasterpieceModel> Get(string id)
+    public async Task<ActionResult<MasterpieceModel>> GetAsync(string id)
     {
-      return Json(_masterpiecePerspectiveRepository.Get(id));
+      return Json(await _masterpiecePerspectiveRepository.GetAsync(id));
     }    
   }
 }

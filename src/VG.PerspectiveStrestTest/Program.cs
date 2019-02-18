@@ -9,15 +9,16 @@ namespace VG.PerspectiveStrestTest
 {
   class Program
   {
+    static int errors = 0;
+
     static void Main(string[] args)
     {
       Console.WriteLine("Starting ...");
 
       long duration = 1;
       int count = 0;
-      int errors = 0;
-
-      for (int i = 0; i < 10; i++)
+     
+      for (int i = 0; i < 4; i++)
       {
         ThreadPool.QueueUserWorkItem(state =>
         {
@@ -42,6 +43,16 @@ namespace VG.PerspectiveStrestTest
         });
       }
 
+      //StartAdding(ref errors);
+
+      while (true)
+      {
+        Console.WriteLine($"Count : {count}, duration: {duration}, errors: {errors}, request/s: {(double)count / duration * 1000 }");
+      }
+    }
+
+    private static void StartAdding()
+    {
       for (int i = 0; i < 10; i++)
       {
         ThreadPool.QueueUserWorkItem(state =>
@@ -54,7 +65,7 @@ namespace VG.PerspectiveStrestTest
               var result = masterpieceApi.CreateMasterpiece(new CreateMasterpieceRequest()
               {
                 Id = Guid.NewGuid().ToString(),
-                Name = "dasdasd",
+                Name = Guid.NewGuid().ToString(),
                 Price = 42423,
                 Produced = DateTime.Parse("2019-01-01")
               });
@@ -67,11 +78,6 @@ namespace VG.PerspectiveStrestTest
             }
           }
         });
-      }
-
-      while (true)
-      {
-        Console.WriteLine($"Count : {count}, duration: {duration}, errors: {errors}, request/s: {(double)count / duration * 1000 }");
       }
     }
   }

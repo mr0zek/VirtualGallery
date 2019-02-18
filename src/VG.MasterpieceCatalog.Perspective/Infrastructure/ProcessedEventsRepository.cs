@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Dapper;
 
 namespace VG.MasterpieceCatalog.Perspective.Infrastructure
@@ -12,19 +13,19 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
       _connectionString = connectionString;
     }
 
-    public int GetLastProcessedEventId()
+    public async Task<int> GetLastProcessedEventIdAsync()
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return connection.QueryFirst<int>(@"select lastEventId from HandledEvents");
+        return await connection.QueryFirstAsync<int>(@"select lastEventId from HandledEvents");
       }
     }
 
-    public void SetLastProcessedEventId(int id)
+    public async Task SetLastProcessedEventIdAsync(int id)
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        connection.Execute(@"update HandledEvents set lastEventId = @id",new { id });
+        await connection.ExecuteAsync(@"update HandledEvents set lastEventId = @id",new { id });
       }
     }
   }

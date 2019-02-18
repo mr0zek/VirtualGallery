@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Timers;
 using Autofac;
 using Hangfire;
@@ -44,8 +45,14 @@ namespace VG.MasterpieceCatalog.Perspective
       {
         var eventsCount = 100;
 
-        while (eventSubscriber.ProcessEvents(eventsCount) == eventsCount)
+        while (true)
         {
+          Task<int> count = eventSubscriber.ProcessEvents(eventsCount);
+          count.Wait();
+          if (count.Result < eventsCount)
+          {
+            break;
+          }
         }
       }
       catch (Exception ex)
