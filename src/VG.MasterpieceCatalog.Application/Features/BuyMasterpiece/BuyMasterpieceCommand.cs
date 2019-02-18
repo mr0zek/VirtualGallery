@@ -6,13 +6,10 @@ namespace VG.MasterpieceCatalog.Application.Features.BuyMasterpiece
   {
     public MasterpieceId MasterpieceId { get; set; }
     public CustomerId CustomerId { get; }
-    public int? ExpectedVersion { get; }
-
-    public BuyMasterpieceCommand(MasterpieceId masterpieceId, CustomerId customerId, int? expectedVersion)
+    public BuyMasterpieceCommand(MasterpieceId masterpieceId, CustomerId customerId)
     {
       MasterpieceId = masterpieceId;
       CustomerId = customerId;
-      ExpectedVersion = expectedVersion;
     }
   }
 }

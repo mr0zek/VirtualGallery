@@ -16,10 +16,10 @@ namespace VG.MasterpieceCatalog.Application.Features.DeleteMasterpiece
       _deleteMasterpieceHandler = deleteMasterpieceHandler;
     }
 
-    [HttpDelete("{id}.{expectedVersion?}")]
-    public void Post(string id, int? expectedVersion)
+    [HttpDelete("{id}")]
+    public void Post(string id)
     {
-      _deleteMasterpieceHandler.Handle(new DeleteMasterpieceCommand(id, expectedVersion));
+      _deleteMasterpieceHandler.Handle(new DeleteMasterpieceCommand(id));
     }
   }
 }

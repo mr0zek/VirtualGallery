@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentMigrator.Runner;
+﻿using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace VG.MasterpieceCatalog.Infrastructure
+namespace VG.MasterpieceCatalog.Infrastructure.Migrations
 {
   public class MasterpieceDatabaseMigrator
   {

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using VG.MasterpieceCatalog.Infrastructure.SqlEventStore;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
@@ -14,8 +13,10 @@ namespace VG.MasterpieceCatalog.Infrastructure
 
     protected override void Load(ContainerBuilder builder)
     {
-      builder.RegisterType<MasterpieceRepository>().AsImplementedInterfaces();
-      builder.RegisterType<EventStore>().WithParameter("connectionString", _connectionString).AsImplementedInterfaces();
+      builder.RegisterType<MasterpieceRepository>()
+        .WithParameter("connectionString", _connectionString)
+        .AsImplementedInterfaces();
+
       builder.RegisterType<CustomerRepository>().AsImplementedInterfaces();
       builder.RegisterType<DateTimeProvider>().AsImplementedInterfaces();
     }

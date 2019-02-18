@@ -29,7 +29,7 @@ namespace VG.MasterpieceCatalog.Application.Infrastructure
       }
       catch (Exception ex)
       {
-        HandleExceptionAsync(context, ex);
+        await HandleExceptionAsync(context, ex);
       }
     }
 
@@ -38,7 +38,7 @@ namespace VG.MasterpieceCatalog.Application.Infrastructure
       var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
       if (exception is IndexOutOfRangeException) code = HttpStatusCode.NotFound;
-      if (exception is DomainException)
+      if (exception is DomainException || exception is IndexOutOfRangeException)
       {
         var result = JsonConvert.SerializeObject(new { error = exception.Message });
         context.Response.ContentType = "application/json";

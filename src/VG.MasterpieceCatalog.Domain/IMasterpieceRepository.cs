@@ -3,6 +3,6 @@
   public interface IMasterpieceRepository
   {
     Masterpiece Get(MasterpieceId id);
-    void Save(Masterpiece masterpiece, int? expectedVersion);
+    void Save(Masterpiece masterpiece);
   }
 }

@@ -41,7 +41,7 @@ namespace VG.MasterpieceCatalog.Application
 
       var builder = new ContainerBuilder();
       string connectionString = Configuration["ConnectionStrings:DefaultConnection"];
-      builder.RegisterModule(new MasterpieceAutofacModule(connectionString, Configuration["MasterpieceCatalog:EventsUrl"]));
+      builder.RegisterModule(new MasterpieceAutofacModule(connectionString));
       RegisterExternalTypes(builder);
       builder.Populate(services);
       var container = builder.Build();

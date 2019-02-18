@@ -32,5 +32,10 @@ namespace VG.MasterpieceCatalog.Domain
     {
       yield return _id;
     }
+
+    public override string ToString()
+    {
+      return _id;
+    }
   }
 }

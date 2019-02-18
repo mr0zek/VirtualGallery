@@ -5,7 +5,6 @@ using Autofac;
 using Dapper;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
-using VG.MasterpieceCatalog.Infrastructure.SqlEventStore;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
@@ -24,25 +23,62 @@ namespace VG.MasterpieceCatalog.Infrastructure
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        var result =  connection.QueryFirstOrDefault<dynamic>(
-          "select AggregateId, Name, Price, Version, Produced from Events where aggregateId = @aggregateId order by version desc",
-          new { aggregateId = id });
-        return new Masterpiece(result.AggregateId, result.Name, result.Price, result.Version, _dateTimeProvider);
-      }      
+        var result = connection.QueryFirstOrDefault<MasterpieceState>(
+          "select Id, Name, Price, Version, Produced, IsRemoved from Masterpieces where Id = @id",
+          new { id = id.ToString() });
+        if (result == null)
+        {
+          throw new IndexOutOfRangeException(id);
+        }
+        return new Masterpiece(result, _dateTimeProvider);
+      }
     }
 
-    public void Save(Masterpiece masterpiece, int? expectedVersion)
+    public void Save(Masterpiece masterpiece)
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        connection.Execute(
-          @"update Masterpieces 
-            set AggregateId = @masterpiece.AggregateId, 
-                Name = @masterpiece.Name, 
-                Price = @masterpiece.Price, 
-                Version = @masterpiece.Version, 
-                Produced = @masterpiece.Produced 
-            where aggregateId = @masterpiece.AggregateId and Version = @expectedVersion", new { masterpiece, expectedVersion });
+        MasterpieceState state = masterpiece.GetState();
+        if (state.Version == 0)
+        {
+          connection.Execute(
+            @"insert into Masterpieces(Id,Name,Price,Version,Produced, IsRemoved)Values(@Id,@Name,@Price,@Version,@Produced, @IsRemoved)",
+            new
+            {
+              state.Id,
+              Version = state.Version + 1,
+              state.Name,
+              state.Price,
+              state.Produced,
+              state.IsRemoved
+            });
+        }
+        else
+        {
+          int rowsAffected = connection.Execute(
+            @"update Masterpieces 
+            set Id = @Id, 
+                Name = @Name, 
+                Price = @Price, 
+                Version = @Version, 
+                Produced = @Produced,
+                IsRemoved = @IsRemoved
+            where Id = @Id and Version = @PrevVersion",
+            new
+            {
+              state.Id,
+              Version = state.Version + 1,
+              PrevVersion = state.Version,
+              state.Name,
+              state.Price,
+              state.Produced,
+              state.IsRemoved
+            });
+          if (rowsAffected == 0)
+          {
+            throw new ConcurrencyException(state.Version);
+          }
+        }
       }
     }
   }

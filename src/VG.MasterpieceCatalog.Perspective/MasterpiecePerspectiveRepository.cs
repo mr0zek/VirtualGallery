@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using VG.MasterpieceCatalog.Contract;
@@ -16,12 +17,21 @@ namespace VG.MasterpieceCatalog.Perspective
       _connectionString = connectionString;
     }
 
-    public async Task<MasterpieceModel> GetAsync(string aggregateId)
+    public async Task<MasterpieceModel> GetAsync(string id)
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return await connection.QueryFirstAsync<MasterpieceModel>(
-           @"select AggregateId,Version,Name,Price from Masterpieces where AggregateId = @AggregateId", new { aggregateId });
+        var ms = await connection.QueryFirstAsync<MasterpieceModelState>(
+          @"select Id,Version,Name,Price,IsRemoved, CustomerId 
+             from Masterpieces where Id = @Id", new {id});
+        return new MasterpieceModel()
+        {
+          Name = ms.Name,
+          Price = ms.Price,
+          Id = ms.Id,
+          Version = ms.Version,
+          IsAvailable = !ms.IsRemoved && ms.CustomerId != null
+        };
       }
     }
 
@@ -29,8 +39,29 @@ namespace VG.MasterpieceCatalog.Perspective
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return new MasterpiecesModel(await connection.QueryAsync<MasterpieceModel>(@"select AggregateId,Version,Name,Price from Masterpieces"));
+        return new MasterpiecesModel((await connection.QueryAsync<MasterpieceModelState>(
+          @"select Id,Version,Name,Price, IsRemoved, CustomerId from Masterpieces"))
+          .Select(ms => new MasterpieceModel()
+          {
+            Name = ms.Name,
+            Price = ms.Price,
+            Id = ms.Id,
+            Version = ms.Version,
+            IsAvailable = !ms.IsRemoved && ms.CustomerId != null
+          }));
       }
+    }
+
+    internal class MasterpieceModelState
+    {
+      public string Id { get; set; }
+      public int Version { get; set; }
+      public string Name { get; set; }
+      public decimal Price { get; set; }
+      public bool IsRemoved { get; set; }
+      public string CustomerId { get; set; }
     }
   }
 }
+
+  

@@ -2,7 +2,7 @@ namespace VG.MasterpieceCatalog.Contract
 {
   public class MasterpieceModel
   {
-    public string AggregateId { get; set; }
+    public string Id { get; set; }
     public int Version { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }

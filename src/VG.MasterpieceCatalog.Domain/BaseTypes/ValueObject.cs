@@ -7,8 +7,6 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
 {
   public abstract class ValueObject : IEqualityComparer, IEquatable<ValueObject>
   {
-    private const int StartValue = 397;
-
     public bool Equals(ValueObject other)
     {
       var a = GetEqualityComponents().ToList();

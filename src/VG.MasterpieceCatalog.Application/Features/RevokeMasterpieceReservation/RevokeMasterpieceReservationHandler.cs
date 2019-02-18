@@ -16,7 +16,7 @@ namespace VG.MasterpieceCatalog.Application.Features.RevokeMasterpieceReservatio
     {
       Domain.Masterpiece m = _masterpieceRepository.Get(command.MasterpieceId);
       m.RevokeReservation(command.CustomerId);
-      _masterpieceRepository.Save(m, command.ExpectedVersion);
+      _masterpieceRepository.Save(m);
     }
   }
 }
