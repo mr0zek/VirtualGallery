@@ -17,13 +17,13 @@ namespace VG.MasterpieceCatalog.Application.Features.GetMasterpiece
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<MasterpiecePerspectiveResponse>> Get()
+    public ActionResult<MasterpiecesModel> Get()
     {
-      return Json(_masterpiecePerspectiveRepository.GetMany());
+      return _masterpiecePerspectiveRepository.GetMany();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<MasterpiecePerspectiveResponse> Get(string id)
+    public ActionResult<MasterpieceModel> Get(string id)
     {
       return Json(_masterpiecePerspectiveRepository.Get(id));
     }    

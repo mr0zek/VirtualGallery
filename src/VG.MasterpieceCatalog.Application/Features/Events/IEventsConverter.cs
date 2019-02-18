@@ -4,7 +4,7 @@ using VG.MasterpieceCatalog.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Application.Features.Events
 {
-  internal interface IEventsConverter
+  public interface IEventsConverter
   {
     Contract.Event Convert(Event @event);
   }
@@ -21,8 +21,7 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
           AggregateId = @event.Data.AggregateId,
           Version = @event.Version,
           Id = @event.Id,
-          Type = @event.Data.GetType().Name,
-          CustomerId = (@event.Data as MasterpieceBoughtEvent).CustomerId
+          CustomerId = ((MasterpieceBoughtEvent) @event.Data).CustomerId
         };
       }
       if (eventType == typeof(MasterpieceCreatedEvent))
@@ -32,9 +31,8 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
           AggregateId = @event.Data.AggregateId,
           Version = @event.Version,
           Id = @event.Id,
-          Type = @event.Data.GetType().Name,
-          Name = (@event.Data as MasterpieceCreatedEvent).Name,
-          Price = (@event.Data as MasterpieceCreatedEvent).Price
+          Name = ((MasterpieceCreatedEvent) @event.Data).Name,
+          Price = ((MasterpieceCreatedEvent) @event.Data).Price
         };
       }
       if (eventType == typeof(MasterpieceReservedEvent))
@@ -44,19 +42,17 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
           AggregateId = @event.Data.AggregateId,
           Version = @event.Version,
           Id = @event.Id,
-          Type = @event.Data.GetType().Name,
-          CustomerId = (@event.Data as MasterpieceReservedEvent).CustomerId,
+          CustomerId = ((MasterpieceReservedEvent) @event.Data).CustomerId,
         };
       }
       if (eventType == typeof(RevokedMasterpieceReservationEvent))
       {
-        return new Contract.MasterpieceReservedEvent()
+        return new Contract.RevokedMasterpieceReservationEvent()
         {
           AggregateId = @event.Data.AggregateId,
           Version = @event.Version,
           Id = @event.Id,
-          Type = @event.Data.GetType().Name,
-          CustomerId = (@event.Data as RevokedMasterpieceReservationEvent).CustomerId,
+          CustomerId = ((RevokedMasterpieceReservationEvent) @event.Data).CustomerId,
         };
       }
       if (eventType == typeof(MasterpieceRemovedEvent))
@@ -65,12 +61,11 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
         {
           AggregateId = @event.Data.AggregateId,
           Version = @event.Version,
-          Id = @event.Id,
-          Type = @event.Data.GetType().Name,
+          Id = @event.Id
         };
       }
 
-      throw new SerializationException("not trcognized type : "+eventType.Name);
+      throw new SerializationException("Not supported type : "+eventType.Name);
     }
   }
 }

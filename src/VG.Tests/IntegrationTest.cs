@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Xml;
 using Autofac;
 using Moq;
+using Newtonsoft.Json;
 using RestEase;
 using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Contract;
@@ -76,18 +77,21 @@ namespace VG.Tests
 
       await masterpieceApi.DeleteMasterpiece("m1");
 
-      var masterpieceEventsApi = RestClient.For<IMasterpieceEventsApi>(masterpieceCatalogUrl);
+      var masterpieceEventsApi = new RestClient(masterpieceCatalogUrl)
+      {
+        JsonSerializerSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects }
+      }.For<IMasterpieceEventsApi>();
 
 
       var result = await masterpieceEventsApi.GetEvents(null,10);
 
       // Assert
-      Assert.Equal(5,result.Length);
-      Assert.IsType<MasterpieceCreatedEvent>(result[0]);
-      Assert.IsType<MasterpieceReservedEvent>(result[1]);
-      Assert.IsType<RevokedMasterpieceReservationEvent>(result[2]);
-      Assert.IsType<MasterpieceBoughtEvent>(result[3]);
-      Assert.IsType<MasterpieceRemovedEvent>(result[4]);
+      Assert.Equal(5,result.Events.Length);
+      Assert.IsType<MasterpieceCreatedEvent>(result.Events[0]);
+      Assert.IsType<MasterpieceReservedEvent>(result.Events[1]);
+      Assert.IsType<RevokedMasterpieceReservationEvent>(result.Events[2]);
+      Assert.IsType<MasterpieceBoughtEvent>(result.Events[3]);
+      Assert.IsType<MasterpieceRemovedEvent>(result.Events[4]);
     }
   }
 }

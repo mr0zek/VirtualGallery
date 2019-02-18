@@ -40,15 +40,15 @@ namespace VG.MasterpieceCatalog.Perspective
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
         return connection.QueryFirst<MasterpieceModel>(
-           @"select AggregateId,Version,Name,Price where AggregateId = @AggregateId", new { aggregateId });
+           @"select AggregateId,Version,Name,Price from MasterpiecesPerspective where AggregateId = @AggregateId", new { aggregateId });
       }
     }
 
-    public IEnumerable<MasterpieceModel> GetMany()
+    public MasterpiecesModel GetMany()
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return connection.Query<MasterpieceModel>(@"select AggregateId,Version,Name,Price");
+        return new MasterpiecesModel(connection.Query<MasterpieceModel>(@"select AggregateId,Version,Name,Price from MasterpiecesPerspective"));
       }
     }
   }

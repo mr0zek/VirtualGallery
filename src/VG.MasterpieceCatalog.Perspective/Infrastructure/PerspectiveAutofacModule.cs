@@ -6,12 +6,12 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
   public class PerspectiveAutofacModule : Module
   {
     private readonly string _connectionString;
-    private string _masterpieceCatalogUrl;
+    private string _eventsUrl;
 
-    public PerspectiveAutofacModule(string connectionString, string masterpieceCatalogUrl)
+    public PerspectiveAutofacModule(string connectionString, string eventsUrl)
     {
       _connectionString = connectionString;
-      _masterpieceCatalogUrl = masterpieceCatalogUrl;
+      _eventsUrl = eventsUrl;
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -23,10 +23,12 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
         .InstancePerLifetimeScope();
 
       builder.RegisterType<EventSubscriber>()
-        .WithParameter("masterpieceCatalogUrl", _masterpieceCatalogUrl)
+        .WithParameter("eventsUrl", _eventsUrl)
         .AsImplementedInterfaces();
 
-      builder.RegisterType<ProcessedEventsRepository>().AsImplementedInterfaces();
+      builder.RegisterType<ProcessedEventsRepository>()
+        .WithParameter("connectionString", _connectionString)
+        .AsImplementedInterfaces();
 
       builder.RegisterType<MasterpiecePerspectiveRepository>()
         .WithParameter("connectionString", _connectionString)

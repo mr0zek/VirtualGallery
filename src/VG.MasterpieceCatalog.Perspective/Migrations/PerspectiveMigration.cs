@@ -10,7 +10,11 @@ namespace VG.MasterpieceCatalog.Perspective.Migrations
       Create.Table("MasterpiecesPerspective")
         .WithColumn("AggregateId").AsString(512).NotNullable()
         .WithColumn("Name").AsString(128).NotNullable()
-        .WithColumn("Price").AsDecimal().NotNullable();
+        .WithColumn("Price").AsDecimal().NotNullable()
+        .WithColumn("Version").AsInt32().NotNullable();
+      Create.Table("HandledEvents")
+        .WithColumn("lastEventId").AsInt32().NotNullable();
+      Insert.IntoTable("HandledEvents").Row(new {lastEventId = 0});
     }
 
     public override void Down()

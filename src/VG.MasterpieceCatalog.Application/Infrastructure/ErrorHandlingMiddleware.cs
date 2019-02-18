@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Application.Infrastructure
 {
@@ -32,18 +33,26 @@ namespace VG.MasterpieceCatalog.Application.Infrastructure
       }
     }
 
-    private static void HandleExceptionAsync(HttpContext context, Exception exception)
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
       var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
       if (exception is IndexOutOfRangeException) code = HttpStatusCode.NotFound;
-            
-      context.Response.ContentType = "application/json";
+      if (exception is DomainException)
+      {
+        var result = JsonConvert.SerializeObject(new { error = exception.Message });
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        return context.Response.WriteAsync(result);        
+      }
+
       context.Response.StatusCode = (int)code;
       if (code == HttpStatusCode.InternalServerError)
       {
         _log.Error("Unhandled exception", exception);
       }
+
+      return Task.CompletedTask;
     }
   }
 }

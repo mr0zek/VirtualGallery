@@ -7,7 +7,16 @@ namespace VG.MasterpieceCatalog.Perspective
   {
     void Add(MasterpieceModel model);
     void Save(MasterpieceModel model);
-    IEnumerable<MasterpieceModel> GetMany();
+    MasterpiecesModel GetMany();
     MasterpieceModel Get(string id);
+  }
+
+  public class MasterpiecesModel
+  {
+    public IEnumerable<MasterpieceModel> Masterpieces { get; set; }
+    public MasterpiecesModel(IEnumerable<MasterpieceModel> masterpieces)
+    {
+      Masterpieces = masterpieces;
+    }    
   }
 }

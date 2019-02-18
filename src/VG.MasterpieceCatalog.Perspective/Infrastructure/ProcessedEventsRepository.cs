@@ -1,16 +1,31 @@
-﻿namespace VG.MasterpieceCatalog.Perspective.Infrastructure
+﻿using System.Data.SqlClient;
+using Dapper;
+
+namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
   class ProcessedEventsRepository : IProcessedEventsRepository
   {
-    private int _lastProcessedEventId;
+    private readonly string _connectionString;
+
+    public ProcessedEventsRepository(string connectionString)
+    {
+      _connectionString = connectionString;
+    }
+
     public int GetLastProcessedEventId()
     {
-      return _lastProcessedEventId;
+      using (SqlConnection connection = new SqlConnection(_connectionString))
+      {
+        return connection.QueryFirst<int>(@"select lastEventId from HandledEvents");
+      }
     }
 
     public void SetLastProcessedEventId(int id)
     {
-      _lastProcessedEventId = id;
+      using (SqlConnection connection = new SqlConnection(_connectionString))
+      {
+        connection.Execute(@"update HandledEvents set lastEventId = @id",new { id });
+      }
     }
   }
 }

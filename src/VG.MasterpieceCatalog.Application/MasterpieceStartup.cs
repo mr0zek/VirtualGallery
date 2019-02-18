@@ -12,6 +12,7 @@ using VG.MasterpieceCatalog.Application.Infrastructure;
 using VG.MasterpieceCatalog.Infrastructure;
 using VG.MasterpieceCatalog.Perspective;
 using FluentValidation.AspNetCore;
+using VG.MasterpieceCatalog.Perspective.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Application
 {
@@ -40,7 +41,7 @@ namespace VG.MasterpieceCatalog.Application
 
       var builder = new ContainerBuilder();
       string connectionString = Configuration["ConnectionStrings:DefaultConnection"];
-      builder.RegisterModule(new MasterpieceAutofacModule(connectionString));
+      builder.RegisterModule(new MasterpieceAutofacModule(connectionString, Configuration["MasterpieceCatalog:EventsUrl"]));
       RegisterExternalTypes(builder);
       builder.Populate(services);
       var container = builder.Build();

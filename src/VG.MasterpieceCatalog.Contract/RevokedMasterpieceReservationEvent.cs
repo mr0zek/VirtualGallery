@@ -2,7 +2,6 @@
 {
   public class RevokedMasterpieceReservationEvent : Event
   {
-    public string AggregateId { get; set; }
-    public string CustomerId { get; }
+    public string CustomerId { get; set; }
   }
 }

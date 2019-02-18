@@ -6,6 +6,6 @@ namespace VG.MasterpieceCatalog.Contract
   public interface IMasterpieceEventsApi
   {
     [Get("api/events")]
-    Task<Event[]> GetEvents([Query]int? lastEventId, [Query]int? count);
+    Task<MasterpieceEvents> GetEvents([Query]int? lastEventId, [Query]int? count);
   }
 }
