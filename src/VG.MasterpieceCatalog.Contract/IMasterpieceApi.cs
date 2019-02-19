@@ -9,7 +9,7 @@ namespace VG.MasterpieceCatalog.Contract
     Task CreateMasterpiece([Body]CreateMasterpieceRequest request);
 
     [Delete("api/masterpieces/{id}")]
-    Task DeleteMasterpiece([Path]string id);
+    Task RemoveMasterpiece([Path]string id);
 
     [Get("api/masterpieces")]
     Task<MasterpiecesModel> GetMasterPieces();

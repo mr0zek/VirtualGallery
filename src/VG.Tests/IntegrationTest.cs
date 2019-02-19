@@ -75,7 +75,7 @@ namespace VG.Tests
 
       await masterpieceApi.BuyMasterpiece("m1", new BuyMasterpieceRequest(){CustomerId = customerId});
 
-      await masterpieceApi.DeleteMasterpiece("m1");
+      await masterpieceApi.RemoveMasterpiece("m1");
 
       var masterpieceEventsApi = new RestClient(masterpieceCatalogUrl)
       {

@@ -1,13 +1,13 @@
 ﻿using VG.MasterpieceCatalog.Domain;
 
-namespace VG.MasterpieceCatalog.Application.Features.DeleteMasterpiece
+namespace VG.MasterpieceCatalog.Application.Features.RemoveMasterpiece
 {
-  public class DeleteMasterpieceCommand
+  public class RemoveMasterpieceCommand
   {
     public MasterpieceId Id { get; }
     public int? ExpectedVersion { get; }
     
-    public DeleteMasterpieceCommand(MasterpieceId id, int? expectedVersion)
+    public RemoveMasterpieceCommand(MasterpieceId id, int? expectedVersion)
     {
       Id = id;
       ExpectedVersion = expectedVersion;
