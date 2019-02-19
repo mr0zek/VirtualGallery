@@ -59,7 +59,7 @@ namespace VG.MasterpieceCatalog.Domain
 
     public void Buy(CustomerId customerId)
     {
-      if (_produced.AddYears(100) < _dateTimeProvider.Now())
+      if (_produced.AddYears(10) < _dateTimeProvider.Now())
       {
         throw new DomainException("Can't be bought, too young to sell");
       }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Core;
 
 namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
@@ -10,6 +11,5 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
       builder.Register(c => container).AsSelf();
       builder.RegisterBuildCallback(c => container = c);
     }
-
   }
 }

@@ -43,7 +43,7 @@ namespace VG.PerspectiveStrestTest
         });
       }
 
-      //StartAdding(ref errors);
+      StartAdding();
 
       while (true)
       {

@@ -54,8 +54,7 @@ namespace VG.Tests
           builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
         }, port, ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
-      PerspectiveBootstrap.Run(new string[0], builder => { }, ConnectionString, masterpieceCatalogUrl);
-
+      
       customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
       dateTimeProviderMock.Setup(f => f.Now()).Returns(DateTime.Parse("2019-01-01"));
 
