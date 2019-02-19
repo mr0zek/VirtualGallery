@@ -19,9 +19,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.Tests", "VG.Tests\VG.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.MasterpieceCatalog.Contract", "VG.MasterpieceCatalog.Contract\VG.MasterpieceCatalog.Contract.csproj", "{27B66D72-57F5-4130-AE11-C2DD63E60357}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VG.PerspectiveStrestTest", "VG.PerspectiveStrestTest\VG.PerspectiveStrestTest.csproj", "{34E87621-8723-498C-81FC-DC77A3C8C69C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VG.PerspectiveStrestTest", "VG.PerspectiveStrestTest\VG.PerspectiveStrestTest.csproj", "{34E87621-8723-498C-81FC-DC77A3C8C69C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{50E97802-93E9-45DD-A84B-3DCC4E5C4BEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8F2CF3C7-0AAB-4E7B-8840-C17A14F5387C}"
+	ProjectSection(SolutionItems) = preProject
+		..\doc\domainDescription.md = ..\doc\domainDescription.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
