@@ -1,50 +1,50 @@
 ﻿using System.Runtime.Serialization;
-using VG.MasterpieceCatalog.Domain;
+using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
   class EventsConverter : IEventsConverter
   {
-    public object Convert(IEvent @event)
+    public Event Convert(IEvent @event)
     {
       var eventType = @event.GetType();
-      if (eventType == typeof(MasterpieceBoughtEvent))
+      if (eventType == typeof(Domain.MasterpieceBoughtEvent))
       {
-        return new Contract.MasterpieceBoughtEvent()
+        return new MasterpieceBoughtEvent()
         {
           AggregateId = @event.AggregateId,
-          CustomerId = ((MasterpieceBoughtEvent)@event).CustomerId
+          CustomerId = ((Domain.MasterpieceBoughtEvent)@event).CustomerId
         };
       }
-      if (eventType == typeof(MasterpieceCreatedEvent))
+      if (eventType == typeof(Domain.MasterpieceCreatedEvent))
       {
-        return new Contract.MasterpieceCreatedEvent()
+        return new MasterpieceCreatedEvent()
         {
           AggregateId = @event.AggregateId,
-          Name = ((MasterpieceCreatedEvent)@event).Name,
-          Price = ((MasterpieceCreatedEvent)@event).Price
+          Name = ((Domain.MasterpieceCreatedEvent)@event).Name,
+          Price = ((Domain.MasterpieceCreatedEvent)@event).Price
         };
       }
-      if (eventType == typeof(MasterpieceReservedEvent))
+      if (eventType == typeof(Domain.MasterpieceReservedEvent))
       {
-        return new Contract.MasterpieceReservedEvent()
+        return new MasterpieceReservedEvent()
         {
           AggregateId = @event.AggregateId,
-          CustomerId = ((MasterpieceReservedEvent)@event).CustomerId,
+          CustomerId = ((Domain.MasterpieceReservedEvent)@event).CustomerId,
         };
       }
-      if (eventType == typeof(RevokedMasterpieceReservationEvent))
+      if (eventType == typeof(Domain.RevokedMasterpieceReservationEvent))
       {
-        return new Contract.RevokedMasterpieceReservationEvent()
+        return new RevokedMasterpieceReservationEvent()
         {
           AggregateId = @event.AggregateId,
-          CustomerId = ((RevokedMasterpieceReservationEvent)@event).CustomerId,
+          CustomerId = ((Domain.RevokedMasterpieceReservationEvent)@event).CustomerId,
         };
       }
       if (eventType == typeof(MasterpieceRemovedEvent))
       {
-        return new Contract.MasterpieceRemovedEvent()
+        return new MasterpieceRemovedEvent()
         {
         };
       }

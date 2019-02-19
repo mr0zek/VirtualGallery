@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ using VG.MasterpieceCatalog.Infrastructure;
 using VG.MasterpieceCatalog.Perspective;
 using FluentValidation.AspNetCore;
 using VG.MasterpieceCatalog.Perspective.Infrastructure;
+using Event = VG.MasterpieceCatalog.Contract.Event;
 
 namespace VG.MasterpieceCatalog.Application
 {
@@ -26,6 +28,7 @@ namespace VG.MasterpieceCatalog.Application
     public IConfiguration Configuration { get; }
 
     public static Action<ContainerBuilder> RegisterExternalTypes { get; set; }
+    public static ConcurrentQueue<Event> Queue { get; set; }
 
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
@@ -41,7 +44,7 @@ namespace VG.MasterpieceCatalog.Application
 
       var builder = new ContainerBuilder();
       string connectionString = Configuration["ConnectionStrings:DefaultConnection"];
-      builder.RegisterModule(new MasterpieceAutofacModule(connectionString, Configuration["MasterpieceCatalog:EventsUrl"]));
+      builder.RegisterModule(new MasterpieceAutofacModule(connectionString, Queue));
       RegisterExternalTypes(builder);
       builder.Populate(services);
       var container = builder.Build();

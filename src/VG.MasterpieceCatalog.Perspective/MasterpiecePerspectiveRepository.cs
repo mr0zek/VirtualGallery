@@ -20,8 +20,8 @@ namespace VG.MasterpieceCatalog.Perspective
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        connection.Execute(@"insert into MasterpiecesPerspective(AggregateId,Version,Name,Price)
-                             values(@AggregateId,@Version,@Name,@Price)", model);
+        connection.Execute(@"insert into MasterpiecesPerspective(AggregateId,Version,Name,Price,IsAvailable)
+                             values(@Id,@Version,@Name,@Price,@IsAvailable)", model);
       }
     }
 
@@ -33,7 +33,8 @@ namespace VG.MasterpieceCatalog.Perspective
                               Version = @Version,
                               Name = @Name,
                               Price = @Price 
-                              where AggregateId = @AggregateId", model);
+                              IsAvailable = @IsAvailable
+                              where AggregateId = @Id", model);
       }
     }
 
@@ -42,7 +43,7 @@ namespace VG.MasterpieceCatalog.Perspective
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
         return await connection.QueryFirstAsync<MasterpieceModel>(
-           @"select AggregateId,Version,Name,Price from MasterpiecesPerspective where AggregateId = @AggregateId", new { aggregateId });
+           @"select AggregateId as Id,Version,Name,Price from MasterpiecesPerspective where AggregateId = @Id", new { aggregateId });
       }
     }
 
@@ -50,7 +51,7 @@ namespace VG.MasterpieceCatalog.Perspective
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return new MasterpiecesModel(await connection.QueryAsync<MasterpieceModel>(@"select AggregateId,Version,Name,Price from MasterpiecesPerspective"));
+        return new MasterpiecesModel(await connection.QueryAsync<MasterpieceModel>(@"select AggregateId as Id,Version,Name,Price from MasterpiecesPerspective"));
       }
     }
   }

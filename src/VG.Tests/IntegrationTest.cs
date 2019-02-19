@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -13,6 +14,7 @@ using VG.MasterpieceCatalog.Infrastructure;
 using VG.MasterpieceCatalog.Infrastructure.Migrations;
 using VG.Tests.BaseTypes;
 using Xunit;
+using Event = VG.MasterpieceCatalog.Contract.Event;
 
 
 namespace VG.Tests
@@ -44,10 +46,10 @@ namespace VG.Tests
       Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
 
       MasterpieceBootstrap.Run(new string[0], builder =>
-        {
-          builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
-          builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
-        }, port, ConnectionString);
+      {
+        builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
+        builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
+      }, port, new ConcurrentQueue<Event>(), ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
 
       customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
@@ -86,7 +88,7 @@ namespace VG.Tests
       {
         builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
         builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
-      }, port, ConnectionString);
+      }, port, new ConcurrentQueue<Event>(), ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
 
       customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
@@ -126,7 +128,7 @@ namespace VG.Tests
       {
         builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
         builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
-      }, port, ConnectionString);
+      }, port, new ConcurrentQueue<Event>(), ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
 
       customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));

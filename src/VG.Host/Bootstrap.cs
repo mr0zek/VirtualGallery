@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Configuration;
 using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Infrastructure;
 using VG.MasterpieceCatalog.Perspective;
 using VG.MasterpieceCatalog.Perspective.Migrations;
+using Event = VG.MasterpieceCatalog.Contract.Event;
 
 namespace VG.Host
 {
@@ -19,8 +21,9 @@ namespace VG.Host
       new PerspectiveDatabaseMigrator().Migrate(connectionString);
       new MasterpieceDatabaseMigrator().Migrate(connectionString);
 
-      MasterpieceBootstrap.Run(args, builder => { }, 12121);
-      PerspectiveBootstrap.Run(args, builder => { }, connectionString, "http://localhost:12121/");
+      ConcurrentQueue<Event> queue = new ConcurrentQueue<Event>();
+      MasterpieceBootstrap.Run(args, builder => { }, 12121, queue);
+      PerspectiveBootstrap.Run(args, builder => { }, connectionString, queue );
     }
   }  
 }

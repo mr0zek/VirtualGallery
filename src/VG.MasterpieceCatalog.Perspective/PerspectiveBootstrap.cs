@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Timers;
 using Autofac;
-using Hangfire;
 using log4net;
+using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Perspective.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Perspective
@@ -14,14 +15,12 @@ namespace VG.MasterpieceCatalog.Perspective
     private static bool _processing;
     private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public static void Run(string[] args, Action<ContainerBuilder> builderFunc, string connectionString, string eventsUrl)
+    public static void Run(string[] args, Action<ContainerBuilder> builderFunc, string connectionString, ConcurrentQueue<Event> queue)
     {
       ContainerBuilder builder = new ContainerBuilder();
-      builder.RegisterModule(new PerspectiveAutofacModule(connectionString, eventsUrl));
+      builder.RegisterModule(new PerspectiveAutofacModule(connectionString, queue));
       builderFunc(builder);
       var container = builder.Build();
-
-      GlobalConfiguration.Configuration.UseSqlServerStorage(connectionString);
 
       _timer.Interval = 1000;
       _timer.Elapsed += (sender, eventArgs) => RunEventsCheck(container.Resolve<IEventSubscriber>());
