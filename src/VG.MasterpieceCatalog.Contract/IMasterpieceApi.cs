@@ -22,5 +22,8 @@ namespace VG.MasterpieceCatalog.Contract
 
     [Post("api/masterpieces/{id}/buyers")]
     Task BuyMasterpiece([Path]string id, [Body]BuyMasterpieceRequest request);
+
+    [Get("api/masterpieces/{id}")]
+    Task<MasterpieceModel> GetMasterPiece([Path]string id);
   }
 }

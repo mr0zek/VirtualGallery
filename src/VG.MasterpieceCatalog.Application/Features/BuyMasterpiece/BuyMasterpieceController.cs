@@ -14,10 +14,10 @@ namespace VG.MasterpieceCatalog.Application.Features.BuyMasterpiece
       _buyMasterpieceHandler = buyMasterpieceHandler;
     }
 
-    [HttpPost("{id}.{expectedVersion?}/buyers")]
-    public void PostBuyers(string id, int? expectedVersion, [FromBody] PostBuyerRequest postBuyer)
+    [HttpPost("{id}/buyers")]
+    public void PostBuyers(string id, [FromBody] PostBuyerRequest postBuyer)
     {
-      _buyMasterpieceHandler.Handle(new BuyMasterpieceCommand(id, postBuyer.CustomerId, expectedVersion));
+      _buyMasterpieceHandler.Handle(new BuyMasterpieceCommand(id, postBuyer.CustomerId));
     }
   }
 }

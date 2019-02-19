@@ -5,12 +5,10 @@ namespace VG.MasterpieceCatalog.Application.Features.RemoveMasterpiece
   public class RemoveMasterpieceCommand
   {
     public MasterpieceId Id { get; }
-    public int? ExpectedVersion { get; }
     
-    public RemoveMasterpieceCommand(MasterpieceId id, int? expectedVersion)
+    public RemoveMasterpieceCommand(MasterpieceId id)
     {
       Id = id;
-      ExpectedVersion = expectedVersion;
     }
   }
 }

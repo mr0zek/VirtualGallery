@@ -1,23 +1,18 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Xml;
 using Autofac;
 using Moq;
-using Newtonsoft.Json;
 using RestEase;
 using VG.MasterpieceCatalog.Application;
 using VG.MasterpieceCatalog.Contract;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Infrastructure;
-using VG.MasterpieceCatalog.Perspective;
+using VG.MasterpieceCatalog.Infrastructure.Migrations;
 using VG.Tests.BaseTypes;
 using Xunit;
-using MasterpieceBoughtEvent = VG.MasterpieceCatalog.Contract.MasterpieceBoughtEvent;
-using MasterpieceCreatedEvent = VG.MasterpieceCatalog.Contract.MasterpieceCreatedEvent;
-using MasterpieceRemovedEvent = VG.MasterpieceCatalog.Contract.MasterpieceRemovedEvent;
-using MasterpieceReservedEvent = VG.MasterpieceCatalog.Contract.MasterpieceReservedEvent;
-using RevokedMasterpieceReservationEvent = VG.MasterpieceCatalog.Contract.RevokedMasterpieceReservationEvent;
 
 
 namespace VG.Tests
@@ -39,7 +34,7 @@ namespace VG.Tests
 
     [Fact]
     [Trait("Category","Integration")]
-    public async void HappyScenario()
+    public async void Add_should_persist_masterpiece()
     {
       // Arrange     
       int port = 12121;
@@ -54,9 +49,11 @@ namespace VG.Tests
           builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
         }, port, ConnectionString);
       string masterpieceCatalogUrl = $"http://localhost:{port}";
-      
+
       customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
       dateTimeProviderMock.Setup(f => f.Now()).Returns(DateTime.Parse("2019-01-01"));
+
+      Thread.Sleep(2000);
 
       // Act
       var masterpieceApi = RestClient.For<IMasterpieceApi>(masterpieceCatalogUrl);
@@ -68,29 +65,93 @@ namespace VG.Tests
         Produced = DateTime.Parse("2019-01-01")
       });
 
-      await masterpieceApi.ReserveMasterpiece("m1", new ReserveMasterpieceRequest(){CustomerId = customerId});
+      MasterpieceModel masterPiece = await masterpieceApi.GetMasterPiece("m1");
+      Assert.NotNull(masterPiece);
+      Assert.Equal("m1", masterPiece.Id);
+    }
 
-      await masterpieceApi.RevokeMasterpieceReservation("m1", customerId);
 
-      await masterpieceApi.BuyMasterpiece("m1", new BuyMasterpieceRequest(){CustomerId = customerId});
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async void Remove_should_make_mastepiece_unaviable()
+    {
+      // Arrange     
+      int port = 12121;
+      string customerId = "CustId1234";
 
+      Mock<ICustomerRepository> customerRepositoryMock = new Mock<ICustomerRepository>();
+      Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+      MasterpieceBootstrap.Run(new string[0], builder =>
+      {
+        builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
+        builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
+      }, port, ConnectionString);
+      string masterpieceCatalogUrl = $"http://localhost:{port}";
+
+      customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
+      dateTimeProviderMock.Setup(f => f.Now()).Returns(DateTime.Parse("2019-01-01"));
+
+      Thread.Sleep(2000);
+
+      var masterpieceApi = RestClient.For<IMasterpieceApi>(masterpieceCatalogUrl);
+      await masterpieceApi.CreateMasterpiece(new CreateMasterpieceRequest()
+      {
+        Id = "m1",
+        Name = "Test1",
+        Price = 15,
+        Produced = DateTime.Parse("2019-01-01")
+      });
+
+      // Act
       await masterpieceApi.RemoveMasterpiece("m1");
 
-      var masterpieceEventsApi = new RestClient(masterpieceCatalogUrl)
+      // Assert
+      var masterPiece = await masterpieceApi.GetMasterPiece("m1");
+      Assert.False(masterPiece.IsAvailable);
+    }
+
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async void Buy_should_make_mastepiece_unaviable()
+    {
+      // Arrange     
+      int port = 12121;
+      string customerId = "CustId1234";
+
+      Mock<ICustomerRepository> customerRepositoryMock = new Mock<ICustomerRepository>();
+      Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+      MasterpieceBootstrap.Run(new string[0], builder =>
       {
-        JsonSerializerSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects }
-      }.For<IMasterpieceEventsApi>();
+        builder.RegisterInstance(customerRepositoryMock.Object).AsImplementedInterfaces();
+        builder.RegisterInstance(dateTimeProviderMock.Object).AsImplementedInterfaces();
+      }, port, ConnectionString);
+      string masterpieceCatalogUrl = $"http://localhost:{port}";
 
+      customerRepositoryMock.Setup(f => f.Get(customerId)).Returns(new Customer(true));
+      dateTimeProviderMock.Setup(f => f.Now()).Returns(DateTime.Parse("2019-01-01"));
 
-      var result = await masterpieceEventsApi.GetEventsAsync(null,10);
+      Thread.Sleep(2000); 
+
+      var masterpieceApi = RestClient.For<IMasterpieceApi>(masterpieceCatalogUrl);
+      await masterpieceApi.CreateMasterpiece(new CreateMasterpieceRequest()
+      {
+        Id = "m1",
+        Name = "Test1",
+        Price = 15,
+        Produced = DateTime.Parse("2019-01-01")
+      });
+
+      // Act
+      await masterpieceApi.BuyMasterpiece("m1", new BuyMasterpieceRequest()
+      {
+        CustomerId = customerId
+      });
 
       // Assert
-      Assert.Equal(5,result.Events.Length);
-      Assert.IsType<MasterpieceCreatedEvent>(result.Events[0]);
-      Assert.IsType<MasterpieceReservedEvent>(result.Events[1]);
-      Assert.IsType<RevokedMasterpieceReservationEvent>(result.Events[2]);
-      Assert.IsType<MasterpieceBoughtEvent>(result.Events[3]);
-      Assert.IsType<MasterpieceRemovedEvent>(result.Events[4]);
+      var masterPiece = await masterpieceApi.GetMasterPiece("m1");
+      Assert.False(masterPiece.IsAvailable);
     }
   }
 }

@@ -6,13 +6,11 @@ namespace VG.MasterpieceCatalog.Application.Features.RevokeMasterpieceReservatio
   {
     public MasterpieceId MasterpieceId { get; set; }
     public CustomerId CustomerId { get; set; }
-    public int? ExpectedVersion { get; }
 
-    public RevokeMasterpieceReservationCommand(MasterpieceId masterpieceId, CustomerId customerId, int? expectedVersion)
+    public RevokeMasterpieceReservationCommand(MasterpieceId masterpieceId, CustomerId customerId)
     {
       MasterpieceId = masterpieceId;
       CustomerId = customerId;
-      ExpectedVersion = expectedVersion;
     }
 
     

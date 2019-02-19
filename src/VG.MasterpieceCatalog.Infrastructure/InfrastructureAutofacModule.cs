@@ -13,9 +13,15 @@ namespace VG.MasterpieceCatalog.Infrastructure
 
     protected override void Load(ContainerBuilder builder)
     {
-      builder.RegisterType<MasterpieceRepository>().AsImplementedInterfaces();
+      builder.Register(context => new MasterpieceRepositoryEventsDecorator(
+            new MasterpieceRepository(context.Resolve<DateTimeProvider>(), _connectionString), context.Resolve<IEventsPublisher>()))
+        .AsImplementedInterfaces();
+
       builder.RegisterType<CustomerRepository>().AsImplementedInterfaces();
       builder.RegisterType<DateTimeProvider>().AsImplementedInterfaces();
+      builder.RegisterType<EventsConverter>().AsImplementedInterfaces();
+      builder.RegisterType<EventsPublisher>().AsImplementedInterfaces();
+      builder.RegisterType<EventsPublisher>().AsImplementedInterfaces();
     }
   }
 }

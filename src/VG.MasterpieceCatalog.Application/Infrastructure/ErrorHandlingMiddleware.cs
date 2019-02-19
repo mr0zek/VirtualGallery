@@ -29,7 +29,7 @@ namespace VG.MasterpieceCatalog.Application.Infrastructure
       }
       catch (Exception ex)
       {
-        HandleExceptionAsync(context, ex);
+        await HandleExceptionAsync(context, ex);
       }
     }
 

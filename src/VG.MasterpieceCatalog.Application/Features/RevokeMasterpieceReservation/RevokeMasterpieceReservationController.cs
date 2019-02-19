@@ -16,10 +16,10 @@ namespace VG.MasterpieceCatalog.Application.Features.RevokeMasterpieceReservatio
       _revokeMasterpieceReservationHandler = revokeMasterpieceReservationHandler;
     }
 
-    [HttpDelete("{id}.{expectedVersion?}/reservations/{customerId}")]
-    public void Post(string id, int? expectedVersion, string customerId)
+    [HttpDelete("{id}/reservations/{customerId}")]
+    public void Post(string id, string customerId)
     {
-      _revokeMasterpieceReservationHandler.Handle(new RevokeMasterpieceReservationCommand(id, customerId, expectedVersion));
+      _revokeMasterpieceReservationHandler.Handle(new RevokeMasterpieceReservationCommand(id, customerId));
     }
   }
 }

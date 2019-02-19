@@ -16,10 +16,10 @@ namespace VG.MasterpieceCatalog.Application.Features.ReserveMasterpiece
       _reserveMasterpieceHandler = reserveMasterpieceHandler;
     }
 
-    [HttpPost("{id}.{expectedVersion?}/reservations")]
-    public void Post(string id, int? expectedVersion, [FromBody] ReserveMasterpieceRequest request)
+    [HttpPost("{id}/reservations")]
+    public void Post(string id, [FromBody] ReserveMasterpieceRequest request)
     {
-      _reserveMasterpieceHandler.Handle(new ReserveMasterpieceCommand(id, request.CustomerId, expectedVersion));
+      _reserveMasterpieceHandler.Handle(new ReserveMasterpieceCommand(id, request.CustomerId));
     }
   }
 }
