@@ -1,6 +1,6 @@
 namespace VG.MasterpieceCatalog.Contract
 {
-  public class ReserveMasterpieceRequest : Event
+  public class ReserveMasterpieceRequest 
   {
     public string CustomerId { get; set; }
   }
