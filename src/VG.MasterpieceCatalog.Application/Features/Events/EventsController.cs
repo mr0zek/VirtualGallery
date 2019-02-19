@@ -10,11 +10,12 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
   public class EventsController : Controller
   {
     private readonly IEventStore _eventRepository;
-      private IEventsConverter _converter;
+    private readonly IEventsConverter _converter;
 
-      public EventsController(IEventStore eventRepository)
+    public EventsController(IEventStore eventRepository, IEventsConverter converter)
     {
       _eventRepository = eventRepository;
+      _converter = converter;
     }
 
     [HttpGet()]
@@ -23,9 +24,9 @@ namespace VG.MasterpieceCatalog.Application.Features.Events
       if (count == null)
       {
         count = 100;
-      }      
+      }
       return _eventRepository.GetFrom(lastEventId, count.Value)
-        .Select(f=> _converter.Convert(f)).ToArray();
+        .Select(f => _converter.Convert(f)).ToArray();
     }
   }
 }

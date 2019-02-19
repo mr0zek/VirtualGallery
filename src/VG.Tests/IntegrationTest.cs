@@ -79,7 +79,7 @@ namespace VG.Tests
       var masterpieceEventsApi = RestClient.For<IMasterpieceEventsApi>(masterpieceCatalogUrl);
 
 
-      var result = await masterpieceEventsApi.GetEvents(null,10);
+      var result = await masterpieceEventsApi.GetEventsAsync(null,10);
 
       // Assert
       Assert.Equal(5,result.Length);

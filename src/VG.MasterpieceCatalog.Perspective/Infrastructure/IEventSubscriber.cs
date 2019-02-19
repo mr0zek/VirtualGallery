@@ -1,7 +1,9 @@
-﻿namespace VG.MasterpieceCatalog.Perspective.Infrastructure
+﻿using System.Threading.Tasks;
+
+namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
   public interface IEventSubscriber
   {
-    int ProcessEvents(int eventsCount);
+    Task<int> ProcessEvents(int eventsCount);
   }
 }

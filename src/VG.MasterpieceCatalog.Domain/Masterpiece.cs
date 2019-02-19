@@ -4,7 +4,7 @@ using VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Domain
 {
-  public class Masterpiece : AggregateRootES
+  public class Masterpiece : AggregateRoot
   {
     private readonly IDateTimeProvider _dateTimeProvider;
     private string _name;

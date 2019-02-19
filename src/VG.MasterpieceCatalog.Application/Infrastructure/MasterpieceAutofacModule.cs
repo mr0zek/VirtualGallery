@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using VG.MasterpieceCatalog.Application.Features.Events;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Infrastructure;
 
@@ -21,6 +22,7 @@ namespace VG.MasterpieceCatalog.Application.Infrastructure
 
       builder.RegisterModule(new InfrastructureAutofacModule(_connectionString));
       builder.RegisterType<MasterpieceFactory>().AsImplementedInterfaces();
+      builder.RegisterType<EventsConverter>().AsImplementedInterfaces();
     }
   }
 }

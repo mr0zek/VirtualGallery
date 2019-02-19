@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
+using log4net;
 using RestEase;
 using VG.MasterpieceCatalog.Contract;
 
@@ -9,8 +10,10 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
   public class EventSubscriber : IEventSubscriber
   {
-    private string _masterpieceCatalogUrl;
-    private IContainer _container;
+    private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    private readonly string _masterpieceCatalogUrl;
+    private readonly IContainer _container;
     private readonly IProcessedEventsRepository _processedEventsRepository;
 
     public EventSubscriber(string masterpieceCatalogUrl, IContainer container, IProcessedEventsRepository processedEventsRepository)
@@ -20,23 +23,31 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
       _processedEventsRepository = processedEventsRepository;
     }
 
-    public int ProcessEvents(int eventsCount)
+    public async Task<int> ProcessEvents(int eventsCount)
     {
       IMasterpieceEventsApi api = RestClient.For<IMasterpieceEventsApi>($"{_masterpieceCatalogUrl}/api/events");
 
-      int lastProcessedEventId = _processedEventsRepository.GetLastProcessedEventId();
-      Task<Event[]> events = api.GetEvents(lastProcessedEventId, eventsCount);
-      events.Wait();
+      int lastProcessedEventId = await _processedEventsRepository.GetLastProcessedEventIdAsync();
+      Event[] events = await api.GetEventsAsync(lastProcessedEventId, eventsCount);
 
-      foreach (var @event in events.Result)
+      foreach (var @event in events)
       {
         Type eventListenerType = typeof(IEventListener<>).MakeGenericType(@event.GetType());
-        var eventListener = _container.Resolve(eventListenerType);
-        eventListenerType.InvokeMember("Handle", BindingFlags.Default, null, eventListener, new object[]{ @event });
-        _processedEventsRepository.SetLastProcessedEventId(@event.Id);
+        if (_container.HasRegistration(eventListenerType))
+        {
+          var eventListener = _container.Resolve(eventListenerType);
+          eventListenerType.InvokeMember("Handle", BindingFlags.InvokeMethod, null, eventListener,
+            new object[] { @event });
+        }
+        else
+        {
+          _log.Warn("Cannot find listener for message type :" + @event.GetType());
+        }
+
+        await _processedEventsRepository.SetLastProcessedEventIdAsync(@event.Id);
       }
 
-      return events.Result.Length;
+      return events.Length;
     }
   }
 }
