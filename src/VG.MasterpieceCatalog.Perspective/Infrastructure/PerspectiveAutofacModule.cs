@@ -25,9 +25,13 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
         .WithParameter("masterpieceCatalogUrl", _masterpieceCatalogUrl)
         .AsImplementedInterfaces();
 
+      builder.RegisterType<ProcessedEventsRepository>()
+        .WithParameter("connectionString", _connectionString)
+        .AsImplementedInterfaces();
+
       builder.RegisterType<MasterpiecePerspectiveRepository>()
         .WithParameter("connectionString", _connectionString)
-        .As<IMasterpiecePerspectiveRepository>();
+        .AsImplementedInterfaces();
     }
   }
 }

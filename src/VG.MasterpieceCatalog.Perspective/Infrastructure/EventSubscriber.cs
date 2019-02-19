@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using log4net;
+using Newtonsoft.Json;
 using RestEase;
 using VG.MasterpieceCatalog.Contract;
 
@@ -25,7 +26,10 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 
     public async Task<int> ProcessEvents(int eventsCount)
     {
-      IMasterpieceEventsApi api = RestClient.For<IMasterpieceEventsApi>($"{_masterpieceCatalogUrl}/api/events");
+      IMasterpieceEventsApi api = new RestClient(_masterpieceCatalogUrl)
+      {
+        JsonSerializerSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects}
+      }.For<IMasterpieceEventsApi>();
 
       int lastProcessedEventId = await _processedEventsRepository.GetLastProcessedEventIdAsync();
       Event[] events = await api.GetEventsAsync(lastProcessedEventId, eventsCount);

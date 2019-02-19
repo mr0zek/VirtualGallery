@@ -17,7 +17,7 @@ namespace VG.MasterpieceCatalog.Perspective.EventListeners
 
     public void Handle(MasterpieceCreatedEvent obj)
     {
-      _masterpiecePerspectiveRepository.Add(new MasterpieceModel(){ AggregateId = obj.AggregateId, Name = obj.Name, Price = obj.Price, Version = obj.Version, IsAvaiable = true});
+      _masterpiecePerspectiveRepository.Add(new MasterpieceModel(){ AggregateId = obj.AggregateId, Name = obj.Name, Price = obj.Price, Version = obj.Version, IsAvailable = true});
     }
   }
 }

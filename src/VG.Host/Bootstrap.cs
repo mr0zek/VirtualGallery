@@ -14,13 +14,12 @@ namespace VG.Host
         .AddJsonFile("appSettings.json");
       var configuration = confBuilder.Build();
       var connectionString = configuration["ConnectionStrings:DefaultConnection"];
-      var masterpieceCatalogUrl = configuration["MasterpieceCatoalog:Port"];
-
+      
       new PerspectiveDatabaseMigrator().Migrate(connectionString);
       new MasterpieceDatabaseMigrator().Migrate(connectionString);
 
       MasterpieceBootstrap.Run(args, builder => { }, 12121);
-      PerspectiveBootstrap.Run(args, builder => { }, connectionString, masterpieceCatalogUrl);
+      PerspectiveBootstrap.Run(args, builder => { }, connectionString, "http://localhost:12121");
     }
   }  
 }

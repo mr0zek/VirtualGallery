@@ -15,7 +15,7 @@ namespace VG.MasterpieceCatalog.Perspective.EventListeners
     public void Handle(MasterpieceBoughtEvent obj)
     {
       MasterpieceModel model = _masterpiecePerspectiveRepository.Get(obj.AggregateId);
-      model.IsAvaiable = false;
+      model.IsAvailable = false;
       _masterpiecePerspectiveRepository.Save(model);
     }
   }
