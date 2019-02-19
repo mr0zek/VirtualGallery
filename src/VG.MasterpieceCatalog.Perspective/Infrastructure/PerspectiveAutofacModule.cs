@@ -1,18 +1,17 @@
-﻿using System.Collections.Concurrent;
-using Autofac;
-using VG.MasterpieceCatalog.Contract;
+﻿using Autofac;
+using VG.Notification.Infrastructure;
 
 namespace VG.MasterpieceCatalog.Perspective.Infrastructure
 {
   public class PerspectiveAutofacModule : Module
   {
     private readonly string _connectionString;
-    private readonly ConcurrentQueue<Event> _eventsQueue;
+    private string _masterpieceCatalogUrl;
 
-    public PerspectiveAutofacModule(string connectionString, ConcurrentQueue<Event> eventsQueue)
+    public PerspectiveAutofacModule(string connectionString, string masterpieceCatalogUrl)
     {
       _connectionString = connectionString;
-      _eventsQueue = eventsQueue;
+      _masterpieceCatalogUrl = masterpieceCatalogUrl;
     }
 
     protected override void Load(ContainerBuilder builder)
@@ -24,8 +23,10 @@ namespace VG.MasterpieceCatalog.Perspective.Infrastructure
         .InstancePerLifetimeScope();
 
       builder.RegisterType<EventSubscriber>()
-        .WithParameter("queue", _eventsQueue)
+        .WithParameter("masterpieceCatalogUrl", _masterpieceCatalogUrl)
         .AsImplementedInterfaces();
+      builder.RegisterType<ProcessedEventsRepository>()
+        .WithParameter("connectionString", _connectionString);
 
       builder.RegisterType<MasterpiecePerspectiveRepository>()
         .WithParameter("connectionString", _connectionString)
