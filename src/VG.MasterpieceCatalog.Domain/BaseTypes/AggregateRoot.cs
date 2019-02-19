@@ -2,20 +2,31 @@
 
 namespace VG.MasterpieceCatalog.Domain.BaseTypes
 {
-  public class AggregateRoot
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+
+  namespace VG.MasterpieceCatalog.Domain.BaseTypes
   {
-    private IEventPublisher _eventPublisher;
-    public Guid Id { get; }
-    public int Version { get; internal set; }
-
-    public AggregateRoot(Guid id)
+    /// <summary>
+    /// AggregateRoot for EventStore
+    /// </summary>
+    public class AggregateRoot : IEventsAccesor
     {
-      Id = id;
-    }
+      private readonly List<IEvent> _changes = new List<IEvent>();
 
-    protected void PublishEvent(IEvent @event)
-    {
-      _eventPublisher.Publish(@event);
+      public string Id { get; protected set; }
+      public int Version { get; internal set; }
+
+      IEnumerable<IEvent> IEventsAccesor.GetEvents()
+      {
+        return _changes;
+      }
+
+      protected void PublishEvent(IEvent @event)
+      {
+        _changes.Add(@event);
+      }
     }
   }
 }

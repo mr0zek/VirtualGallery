@@ -5,12 +5,10 @@ namespace VG.MasterpieceCatalog.Infrastructure
   internal class ConcurrencyException : Exception
   {
     public int CurrentVersion { get; }
-    public int ExpectedVersion { get; }
-
-    public ConcurrencyException(int currentVersion, int expectedVersion)
+    
+    public ConcurrencyException(int currentVersion)
     {
-      CurrentVersion = currentVersion;
-      ExpectedVersion = expectedVersion;
+      CurrentVersion = currentVersion;    
     }
   }
 }

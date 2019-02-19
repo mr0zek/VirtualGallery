@@ -4,6 +4,6 @@ namespace VG.MasterpieceCatalog.Domain.BaseTypes
 {
   public interface IEventsAccesor
   {
-    IEnumerable<IEvent> GetUncommittedChanges();
+    IEnumerable<IEvent> GetEvents();
   }
 }

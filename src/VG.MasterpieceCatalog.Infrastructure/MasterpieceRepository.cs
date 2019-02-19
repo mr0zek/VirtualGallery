@@ -1,50 +1,85 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 using Autofac;
+using Dapper;
 using VG.MasterpieceCatalog.Domain;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
-using VG.MasterpieceCatalog.Infrastructure.SqlEventStore;
 
 namespace VG.MasterpieceCatalog.Infrastructure
 {
   class MasterpieceRepository : IMasterpieceRepository
   {
-    private readonly IEventStore _eventStore;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly string _connectionString;
 
-    public MasterpieceRepository(IEventStore eventStore, IDateTimeProvider dateTimeProvider)
+    public MasterpieceRepository(IDateTimeProvider dateTimeProvider, string connectionString)
     {
-      _eventStore = eventStore;
       _dateTimeProvider = dateTimeProvider;
+      _connectionString = connectionString;
     }
 
     public Masterpiece Get(MasterpieceId id)
     {
-      var events = _eventStore.Load(id);
-      if (!events.Any())
+      using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        throw new IndexOutOfRangeException();
+        var result = connection.QueryFirstOrDefault<MasterpieceState>(
+          "select Id, Name, Price, Version, Produced, IsRemoved from Masterpieces where Id = @id",
+          new { id = id.ToString() });
+        if (result == null)
+        {
+          throw new IndexOutOfRangeException(id);
+        }
+        return new Masterpiece(result, _dateTimeProvider);
       }
-
-      Masterpiece m = new Masterpiece(events, _dateTimeProvider);
-      if (m.IsRemoved())
-      {
-        throw new IndexOutOfRangeException(id);
-      }
-      return m;
     }
 
-    public void Save(Masterpiece masterpiece, int? expectedVersion)
+    public void Save(Masterpiece masterpiece)
     {
-      var events = (masterpiece as IEventsAccesor).GetUncommittedChanges();
-      if (events.First().GetType().IsAssignableFrom(typeof(MasterpieceCreatedEvent)))
+      using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        if (_eventStore.HasEvents(masterpiece.Id))
+        MasterpieceState state = masterpiece.GetState();
+        if (state.Version == 0)
         {
-          throw new InvalidOperationException($"Object already exists : {masterpiece.Id}");
+          connection.Execute(
+            @"insert into Masterpieces(Id,Name,Price,Version,Produced, IsRemoved)Values(@Id,@Name,@Price,@Version,@Produced, @IsRemoved)",
+            new
+            {
+              state.Id,
+              Version = state.Version + 1,
+              state.Name,
+              state.Price,
+              state.Produced,
+              state.IsRemoved
+            });
+        }
+        else
+        {
+          int rowsAffected = connection.Execute(
+            @"update Masterpieces 
+            set Id = @Id, 
+                Name = @Name, 
+                Price = @Price, 
+                Version = @Version, 
+                Produced = @Produced,
+                IsRemoved = @IsRemoved
+            where Id = @Id and Version = @PrevVersion",
+            new
+            {
+              state.Id,
+              Version = state.Version + 1,
+              PrevVersion = state.Version,
+              state.Name,
+              state.Price,
+              state.Produced,
+              state.IsRemoved
+            });
+          if (rowsAffected == 0)
+          {
+            throw new ConcurrencyException(state.Version);
+          }
         }
       }
-      _eventStore.Save(masterpiece.Id, events, expectedVersion);
     }
   }
 }

@@ -1,64 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using VG.MasterpieceCatalog.Domain.BaseTypes;
+using VG.MasterpieceCatalog.Domain.BaseTypes.VG.MasterpieceCatalog.Domain.BaseTypes;
 
 namespace VG.MasterpieceCatalog.Domain
 {
-  public class Masterpiece : AggregateRootES
+  public class Masterpiece : AggregateRoot
   {
     private readonly IDateTimeProvider _dateTimeProvider;
-    private string _name;
-    private Money _price;
-    private DateTime _produced;
-
-    /// <summary>
-    /// customers who bought the masterpiece
-    /// </summary>
-    private readonly ISet<CustomerId> _customersIds = new HashSet<CustomerId>();
+    private readonly string _name;
+    private readonly Money _price;
+    private readonly DateTime _produced;
+    private CustomerId _customerId;
     private CustomerId _reservationCustomerId;
     private bool _isRemoved;
 
-    private void Apply(MasterpieceCreatedEvent @event)
+    public Masterpiece(MasterpieceState state, IDateTimeProvider dateTimeProvider)
     {
-      Id = @event.AggregateId;
-      _name = @event.Name;
-      _price = @event.Price;
-      _produced = @event.Produced;
-    }
-
-    private void Apply(MasterpieceRemovedEvent @event)
-    {
-      _isRemoved = true;      
-    }
-
-    private void Apply(MasterpieceReservedEvent @event)
-    {
-      _reservationCustomerId = @event.CustomerId;      
-    }
-
-    private void Apply(RevokedMasterpieceReservationEvent @event)
-    {
-      _reservationCustomerId = null;      
-    }
-
-    internal Masterpiece(MasterpieceId id, string name, Money price, DateTime produced, IDateTimeProvider dateTimeProvider)
-    {
-      Id = id;
-      _name = name;
-      _price = price;
-      _produced = produced;
+      Id = state.Id;
+      _name = state.Name;
+      _price = state.Price;
+      _isRemoved = state.IsRemoved;
+      Version = state.Version;
+      _produced = state.Produced;
       _dateTimeProvider = dateTimeProvider;
-      PublishEvent(new MasterpieceCreatedEvent(Id, name, produced, price));
-    }
-
-    public Masterpiece(IEnumerable<IEvent> events, IDateTimeProvider dateTimeProvider)
-    {
-      _dateTimeProvider = dateTimeProvider;
-      LoadsFromHistory(events);
+      PublishEvent(new MasterpieceCreatedEvent(Id, _name, _produced, _price));
     }
 
     public void Buy(CustomerId customerId)
     {
+      if (_customerId != null)
+      {
+        throw new DomainException("Already sold");
+      }
       if (_produced.AddYears(10) < _dateTimeProvider.Now())
       {
         throw new DomainException("Can't be bought, too young to sell");
@@ -68,12 +42,7 @@ namespace VG.MasterpieceCatalog.Domain
         throw new DomainException("Can't be bought, already reserved by different user");
       }
 
-      if (_customersIds.Contains(customerId))
-      {
-        throw new DomainException("Already bought");
-      }
-
-      _customersIds.Add(customerId);
+      _customerId = customerId;
 
       PublishEvent(new MasterpieceBoughtEvent(Id, customerId));
     }
@@ -86,6 +55,10 @@ namespace VG.MasterpieceCatalog.Domain
 
     public void Reserve(CustomerId customerId, ICustomerRepository customerRepository)
     {
+      if (_customerId != null)
+      {
+        throw new DomainException("Already sold");
+      }
       if (!customerRepository.Get(customerId).CanReserve())
       {
         throw new DomainException("Only VIP Clients can reserve masterpieces");
@@ -121,9 +94,9 @@ namespace VG.MasterpieceCatalog.Domain
       PublishEvent(new RevokedMasterpieceReservationEvent(Id, customerId));
     }
 
-    public bool IsRemoved()
+    public MasterpieceState GetState()
     {
-      return _isRemoved;
+      return new MasterpieceState(Id, _name, _price, _produced, Version, _isRemoved);
     }
   }
 }
