@@ -18,8 +18,8 @@ namespace VG.MasterpieceCatalog.Perspective
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        connection.Execute(@"insert into MasterpiecesPerspective(AggregateId,Version,Name,Price)
-                             values(@AggregateId,@Version,@Name,@Price)", model);
+        connection.Execute(@"insert into MasterpiecesPerspective(AggregateId,Version,Name,Price, IsAvailable)
+                             values(@AggregateId,@Version,@Name,@Price, @IsAvailable)", model);
       }
     }
 
@@ -30,7 +30,8 @@ namespace VG.MasterpieceCatalog.Perspective
         connection.Execute(@"update MasterpiecesPerspective set
                               Version = @Version,
                               Name = @Name,
-                              Price = @Price 
+                              Price = @Price,
+                              IsAvailable = @IsAvailable
                               where AggregateId = @AggregateId", model);
       }
     }
@@ -40,7 +41,7 @@ namespace VG.MasterpieceCatalog.Perspective
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
         return connection.QueryFirst<MasterpieceModel>(
-           @"select AggregateId,Version,Name,Price where AggregateId = @AggregateId", new { aggregateId });
+           @"select AggregateId,Version,Name,Price,IsAvailable where AggregateId = @AggregateId", new { aggregateId });
       }
     }
 
@@ -48,7 +49,7 @@ namespace VG.MasterpieceCatalog.Perspective
     {
       using (SqlConnection connection = new SqlConnection(_connectionString))
       {
-        return connection.Query<MasterpieceModel>(@"select AggregateId,Version,Name,Price");
+        return connection.Query<MasterpieceModel>(@"select AggregateId,Version,Name,Price,IsAvailable");
       }
     }
   }

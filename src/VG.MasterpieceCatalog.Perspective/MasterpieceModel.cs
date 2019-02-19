@@ -6,6 +6,6 @@
     public int Version { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }
-    public bool IsAvaiable { get; set; }
+    public bool IsAvaiable { get; set; } 
   }
 }
